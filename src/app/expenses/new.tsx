@@ -42,7 +42,7 @@ export default function NewExpense() {
 			createdAt: new Date().toISOString(),
 		});
 
-		router.back();
+		router.replace("/");
 	}
 
 	return (
