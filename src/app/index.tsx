@@ -1,9 +1,29 @@
-import { Text, View, StyleSheet } from "react-native";
+import { Text, View, StyleSheet, Button } from "react-native";
+import { Link } from "expo-router";
+import { useExpenses } from "@/contexts/ExpensesContext";
 
-export default function Index() {
+export default function Home() {
+	const { expenses, addExpense } = useExpenses();
+
+	function handleTestExpense() {
+		addExpense({
+			id: Date.now().toString(),
+			description: "Despesa de teste",
+			value: 25,
+			category: "Alimentação",
+			createdAt: new Date().toISOString(),
+		});
+	}
+
 	return (
-		<View style={styles.container}>
-			<Text>Edit src/app/index.tsx to edit this screen.</Text>
+		<View>
+			<Text>Quantidade: {expenses.length}</Text>
+
+			<Button title="Adicionar despesa teste" onPress={handleTestExpense} />
+
+			<Link style={styles.container} href="/expenses/new">
+				Nova Despesa
+			</Link>
 		</View>
 	);
 }
