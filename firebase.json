@@ -1,0 +1,27 @@
+{
+  "hosting": {
+    "public": "dist",
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**", "**/*.map"],
+    "cleanUrls": true,
+    "trailingSlash": false,
+    "rewrites": [
+      { "source": "/expenses/*", "destination": "/expenses/[id].html" }
+    ],
+    "headers": [
+      {
+        "source": "/**",
+        "headers": [
+          { "key": "X-Content-Type-Options", "value": "nosniff" },
+          { "key": "Referrer-Policy", "value": "no-referrer" },
+          { "key": "Cache-Control", "value": "no-cache" }
+        ]
+      }
+    ],
+    "predeploy": ["node scripts/build-hosted-web.cjs"]
+  },
+  "emulators": {
+    "hosting": { "host": "127.0.0.1", "port": 5000 },
+    "ui": { "enabled": false },
+    "singleProjectMode": true
+  }
+}

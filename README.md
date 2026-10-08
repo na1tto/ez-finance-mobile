@@ -1,4 +1,16 @@
-# Welcome to your Expo app 👋
+# ez-finance
+
+Hospedagem aprovada: **Firebase Hosting + Supabase Free**, com prioridade de custo zero. Configuração local, ambiente de produção, callbacks e pendências em [hospedagem](docs/HOSPEDAGEM.md). Recursos externos, SMTP, backup/restauração e validação hospedada ainda pendentes.
+
+SPEC-005 entregue na web local: criar receitas/despesas com data efetiva, editar pelo card/URL, excluir com confirmação e proteger alterações não salvas/duplicadas. Lista transitória dos dois tipos com totais de todo o histórico, usando Auth e persistência existentes. [Evidências F01–F14](docs/validacoes/005-formularios-e-protecao-de-alteracoes.md). SPEC-006, hospedado/backup e Android/APK continuam no plano; V1 não concluída.
+
+Consulte [ambiente e integração Supabase](docs/AMBIENTE_SUPABASE.md) para configurar `.env.local`, reutilizar Docker e executar `npm run web` na origem **http://localhost:8081**. Os scripts validam a configuração pública antes de empacotar. Nunca colocar chaves administrativas ou segredo Google em variáveis `EXPO_PUBLIC_*`.
+
+Validações: `npm test`, `npm run typecheck`, testes SQL locais e `npm run build:web`. Estado/pendências em [contexto](docs/CONTEXTO_APP.md) e [plano](docs/PLANO_IMPLEMENTACAO.md).
+
+Referências e regras de interface: [base de design](docs/design/README.md), com catálogo Mobbin, inventário visual e registro de ícones. A identidade continua em refinamento; propostas não são requisitos aprovados.
+
+## Referência original do template Expo
 
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 

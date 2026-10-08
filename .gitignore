@@ -25,13 +25,21 @@ expo-env.d.ts
 npm-debug.*
 yarn-debug.*
 yarn-error.*
+firebase-debug.log*
+.firebase/
 
 # macOS
 .DS_Store
 *.pem
 
-# local env files
-.env*.local
+# Real environment files (including server credentials); templates remain versionable.
+.env
+.env.*
+!.env.example
+
+# Temporary read-only browser diagnostics; never ship as application UI.
+/public/__spec002-check/
+/public/__spec003-check/
 
 # typescript
 *.tsbuildinfo

@@ -1,0 +1,26 @@
+# Sparse configuration for the hosted project. Never push the local Docker config.
+# Run with --workdir deployment --project-ref tgfdihnemrseyifvfwan.
+project_id = "ez-finance-hosted"
+
+[auth]
+enabled = true
+site_url = "https://ez-finance-7c789.web.app"
+additional_redirect_urls = [
+  "https://ez-finance-7c789.web.app/auth/callback",
+  "https://ez-finance-7c789.web.app/auth/callback?attempt=*",
+  "https://ez-finance-7c789.web.app/auth/reset-password",
+  "https://ez-finance-7c789.web.app/auth/reset-password?attempt=*",
+  "ezfinance://auth/callback",
+  "ezfinance://auth/callback?attempt=*",
+  "ezfinance://auth/reset-password",
+  "ezfinance://auth/reset-password?attempt=*",
+]
+enable_signup = true
+enable_anonymous_sign_ins = false
+enable_manual_linking = false
+
+[auth.email]
+enable_signup = true
+enable_confirmations = true
+double_confirm_changes = true
+

@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.domain.json",
+  "include": [
+    "src/domain/**/*.ts",
+    "src/types/transaction.ts",
+    "src/constants/transactionCategories.ts",
+    "src/config/supabase.ts",
+    "src/lib/supabase/client.ts",
+    "src/lib/auth/storage.ts",
+    "src/lib/auth/contracts.ts",
+    "src/lib/auth/navigation.ts",
+    "src/lib/auth/controller.ts",
+    "src/lib/transactions/**/*.ts"
+  ]
+}

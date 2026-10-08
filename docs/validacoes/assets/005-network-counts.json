@@ -1,0 +1,31 @@
+{
+  "date": "2026-10-08",
+  "POST": {
+    "calls": 6,
+    "commits": 5
+  },
+  "PATCH": {
+    "calls": 2,
+    "commits": 2
+  },
+  "DELETE": {
+    "calls": 1,
+    "commits": 1
+  },
+  "delayedRead": {
+    "captured": 1,
+    "delivered": 1
+  },
+  "humanAccounts": 2,
+  "humanBaselineRows": 0,
+  "secretScanPassed": true,
+  "testTransportAbsentFromExport": true,
+  "cleanup": {
+    "fixtureUsersRemoved": 2,
+    "remainingFixtureRowsRemoved": 4,
+    "mailpitFixtureRemoved": true,
+    "humanAuthAndIdentitiesUnchanged": true,
+    "humanRowsUnchanged": true,
+    "browserFixtureSessionCleared": true
+  }
+}

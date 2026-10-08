@@ -1,0 +1,69 @@
+# SPEC-005 — Validação dos formulários e proteção das alterações
+
+**Data:** 08/10/2026. **Resultado:** F01–F14 aprovados no marco web local, pelos métodos discriminados abaixo. V1 não concluída; consulta mensal/filtros, hospedado/backup e Android/APK continuam posteriores.
+
+## Entrega e limites
+
+Formulário compartilhado em `src/components/TransactionForm.tsx`, controller em `src/lib/transactions/form.ts` e confirmação em `src/components/FinancialConfirmation.tsx`. Reutilizados domínio, catálogo, cliente público Supabase, Auth, repositório e reconciliação da SPEC-004. Provider mantém controller estável e snapshot de rascunho/baseline associado a dono, modo, ID e versão. Cadastro e edição permanecem em `/expenses/new` e `/expenses/[id]`; cards abrem edição. Lista transitória contém ambos os tipos e receitas/despesas/saldo de **todo o histórico**. Nenhum controle de mês/categoria adicionado.
+
+Não foram necessárias migrations, mudanças de grants/RLS/Auth ou dependências. O banco existente já suporta ambos os tipos, data civil e CRUD de campos editáveis. Nenhuma credencial administrativa entrou no aplicativo. O uso administrativo ficou no setup/leitura de baseline/limpeza das fixtures locais dos testes.
+
+Rascunhos somente em memória. Não há autosave, fila offline, merge entre dispositivos ou restauração persistente após reload. Android mantém código compatível, mas não foi executado em aparelho/APK.
+
+## Métodos e ambiente real
+
+- Expo 57.0.22 / Expo Router 57.0.21 / React Native 0.86.3 / SDK Supabase 2.117.3; Supabase local em 127.0.0.1:54321, PostgreSQL Docker e Mailpit 54324.
+- Navegador integrado real para formulários, foco/teclado, SDK/Auth/API, confirmações, duas abas, erros e reconciliação. Firefox externo, operado pelo usuário, para F5, fechamento, Voltar nativo e zoom de 200%.
+- Instância de prova 8082, configurada somente no processo para o transporte 54340. A instância humana 8081, arquivos de ambiente e configuração Supabase foram preservados. Recuperação real também exercitada em 8081 com uma conta descartável.
+- Harness reproduzível: `scripts/validate-forms-ui.cjs`. Setup cria duas contas descartáveis; proxy encaminha Auth/PostgREST reais e aceita somente essas identidades. Administração não é encaminhada. O aplicativo continua autenticando pelo SDK público e sujeito a RLS.
+- Falha pré-commit: transporte interrompe antes de encaminhar POST. Falha pós-commit: encaminha POST/PATCH/DELETE, recebe e consome a resposta de sucesso do serviço real e entrega ao browser somente parte do corpo. O request do aplicativo termina por timeout, embora o commit já exista. Leitura administrativa privada confirmou linha/campos/ausência antes do retry. Isso **não** é resposta simulada de banco nem teste exclusivo do controller.
+- Leitura atrasada: GET por ID autorizado em A capturado do serviço real, corpo retido por 12 segundos; logout externo e login B ocorreram antes da entrega. O corpo foi entregue depois da troca e não reapareceu no DOM de B.
+
+[Contadores seguros de transporte e limpeza](assets/005-network-counts.json). Captura sem dados humanos: [diálogo com descrição longa em 320 px](assets/005-dialogo-320.png).
+
+## Matriz F01–F14
+
+| Critério | Resultado | Evidência efetiva |
+| --- | --- | --- |
+| F01 — Cadastro dos tipos | Aprovado | Browser criou despesa 35,90 em Alimentação e receita 999999.99 em Salário; hoje inicial 2026-10-08. POSTs reais e releitura em documentos/sessões novas mostraram ambos sob dono A, categorias e centavos corretos. Limite mínimo 0,01 também persistido. |
+| F02 — Dinheiro/campos | Aprovado | Browser submeteu vazio, zero, -1, NaN, 1.000,00, 1,234 e 1000000: erros visíveis, descrição/categoria/data preservadas e nenhum POST. Foco no primeiro input inválido. 0,01 e 999999,99 aceitos; domínio testa limites/formas e ausência de arredondamento. |
+| F03 — Data efetiva | Aprovado | Criação com 2024-02-29 persistiu dia civil; edição para 2025-01-02. Criação e edição rejeitaram dia inexistente e futuro 2099-01-01. Hoje permaneceu padrão de novo formulário; created_at distinto e imutável, verificado na leitura do banco. Unidade cobre rerender/catálogo e revalidação da mesma identidade sem redefinir data/draft. |
+| F04 — Card/URL/edição | Aprovado | Enter no link do card abriu formulário; URL direta/documento novo carregou baseline autorizada. Alteração despesa → receita, Alimentação → Trabalho extra, 35,90 → 120,01 e data 2025-01-02 preservou ID, user_id e created_at, com uma única linha. Totais passaram a receitas/saldo 1.000.120,00 e despesas 0,00 antes das outras fixtures. Campos monetários editados sem milhar. |
+| F05 — Leitura da edição | Aprovado | Browser mostrou carregamento, falha real de GET, botão de retry e baseline 23,00 após recuperar transporte; nenhum cadastro vazio/salvamento foi oferecido no erro. ID alheio sob B mostrou ausência/inacessibilidade sem descrição/valor. Leitura real atrasada A→B descartada; unidades cobrem IDs diferentes, draft dirty, revalidação e resposta antiga após retry. |
+| F06 — Exclusão | Aprovado | Cancelar diálogo preservou registro e descrição não salva, com DELETE=0. Confirmar gerou um DELETE real; banco ficou sem a linha mesmo durante timeout. Reconciliação voltou à lista sem segundo DELETE ou segundo aviso de descarte, removendo 120,01 dos totais; novas leituras não fizeram a linha reaparecer. |
+| F07 — Dirty/baseline | Aprovado | Unidades cobrem tipo, descrição vazia, texto monetário inválido, categoria e data; baseline inicial/salva limpa. Browser voltou sem diálogo ao trocar 35,90 por equivalente 35.90. Trocar tipo limpou categoria, e salvar exigiu nova seleção do tipo correto. Texto inválido/rascunho acionou confirmação; reversão da data à baseline permitiu saída limpa. |
+| F08 — Descarte/navegação | Aprovado | Browser verificou Cancelar, cabeçalho, Minha conta e logout voluntário: continuar mantém campos/rota; descartar não emite escrita. Firefox externo confirmou Voltar nativo, continuidade dos campos e retorno à lista ao descartar. Exclusão confirmada não causou segundo diálogo. Tentativa incerta avisa commit possível e orienta conferir histórico antes de repetir. |
+| F09 — Refresh/fechar | Aprovado, com limites | Firefox: após correção, F5 apresentou aviso; permanecer conservou descrição; permitir reload reiniciou vazio. Fechar aba dirty também apresentou aviso. Listener derivado do snapshot e instalado só enquanto dirty/pending/working; cleanup ao limpar/salvar/sair. Fechar/reabrir não restaura draft. Não há garantia em encerramento forçado, crash, mobile ou navegador que suprima avisos. |
+| F10 — Falhas/retry | Aprovado | POST antes de commit manteve campos/UUID, sem linha; retry criou uma única linha. POST/PATCH/DELETE com commit real e corpo perdido mantiveram campos bloqueados e reconciliaram sem nova mutação. Contadores pós-retry permaneceram iguais em cada perda pós-commit. PATCH confirmado + GETs falhando retornou à lista com mensagem separada, última consulta sinalizada e totais antigos; retry de leitura atualizou despesas 22,01 → 23,01. Conflito após resultado incerto não gera UUID substituto nem libera payload (teste específico). |
+| F11 — Concorrência | Aprovado | Duplo clique no cadastro pós-commit emitiu um POST/um commit. Inputs e ações concorrentes ficaram desabilitados; cabeçalho durante envio permaneceu no formulário. Timeout finito ofereceu reconciliação. Unidades cobrem mesma Promise para handlers repetidos e rejeição de salvar/excluir/descartar concorrentes. Repositório serializa por dono/ID e limita cada request a 15 s; consultas sequenciais podem acrescentar tempo à operação completa. |
+| F12 — Sessão/isolamento | Aprovado | A com rascunho e diálogo de excluir: logout em segunda aba removeu formulário/dialog imediatamente. Login B mostrou zero linhas/totais, novo formulário vazio e ID de A inacessível; contador DELETE permaneceu 1. GET real atrasado de A foi entregue após B sem repovoar dados. Link real de recuperação no Mailpit colocou ambas as abas 8081 no fluxo restrito e limpou rascunho; nenhuma senha foi alterada. Unidades conferem tokens antigos de diálogo e callbacks obsoletos; regressão Auth/API e RLS real passou. |
+| F13 — Usabilidade | Aprovado no recorte web | Inspeção em 320×720 e 1280×720, descrição de aproximadamente 700 caracteres, valor máximo, rolagem, Tab/Enter/Escape e foco inicial seguro. Diálogo longo tem mensagem rolável e mantém cancelar/confirmar dentro do viewport; Tab permaneceu no modal (incluindo região rolável) e Escape cancelou sem DELETE. Link acessível inclui descrição, tipo, valor, categoria e data; inputs têm nomes acessíveis e primeiro erro recebe foco. Firefox a 200% permite alcançar salvar/cancelar; modal bloqueia interação/rolagem de fundo até fechar. Não é auditoria completa de leitor de tela/WCAG nem validação de teclado Android; refinamento de identidade visual continua em sua documentação própria. |
+| F14 — Regressão/limpeza | Aprovado | 45 unitários, 46 com financeiro real, 46 com Auth real, 63 SQL, tipos e exportação web passaram. Scan privado não encontrou segredo Google, service_role ou senhas de fixture em dist/logs; endpoint 54340 ausente da exportação. Duas contas UI descartáveis, quatro linhas restantes e email Mailpit identificados removidos; a quinta linha criada já fora removida pela exclusão testada. Baseline de duas contas humanas, IDs de identidades e finanças (zero linhas no início) igual após limpeza. Cada suíte limpou suas próprias fixtures; sem reset/volume/grants modificados. |
+
+## Correções encontradas na execução
+
+1. O primeiro teste humano no Firefox não apresentou beforeunload. A leitura de dirty por método de controller estável podia ser memoizada pelo React Compiler com o valor inicial limpo. Valores renderizados passaram a derivar do snapshot assinado; versão do formulário também participa da validade visual do diálogo. O usuário repetiu F5 e fechamento com sucesso.
+2. A navegação web de histórico pode resetar a raiz, sem passar pela proteção da tela aninhada. Capture de popstate mantém a rota/formulário montados, repõe a âncora enquanto o usuário decide e executa o destino somente após abandono autorizado; não altera Expo Router nem grava rascunho no history. Firefox confirmou continuar/descarte. Enquanto bloqueia uma travessia, essa reposição pode substituir a ramificação de histórico adiante; não é promessa de conservar toda a pilha de Avançar. Trocas de documento continuam sob beforeunload, controlado pelo browser. O botão back/reload do navegador integrado não foi usado como prova de comportamento nativo do Firefox.
+3. Diálogo limitado a 90% da altura, mensagem rolável, ações preservadas e sem animação de fechamento que pudesse exibir título transitório de outro diálogo. Screenshot 320 px comprova os controles visíveis com descrição longa.
+4. Leitura interrompida por revalidação mantém erro explícito/retry, e resposta antiga não substitui a nova. Conflito após envio incerto mantém intenção congelada; nenhuma geração silenciosa de UUID para contornar conflito.
+
+## Regressões executadas e reprodução
+
+| Comando | Resultado final |
+| --- | --- |
+| npm test | 45/45, sem skip/falha |
+| npm run test:finance | 46/46; Auth/API reais, 1.007 linhas, RLS, CRUD e resposta perdida após commits POST/PATCH/DELETE |
+| npm run test:auth | 46/46; confirmação/reenvio/login/recuperação/renovação/logout reais, Mailpit e isolamento |
+| npx --offline --yes supabase@2.120.0 test db | 63/63, dois arquivos pgTAP com rollback |
+| npm run typecheck | Aprovado |
+| npm run build:web | Aprovado; 11 rotas, incluindo new e [id], sem transporte de falhas no bundle |
+
+A preparação da prova UI é separada das suítes: `node scripts/validate-forms-ui.cjs setup`, depois `proxy`; iniciar Expo em 8082 com EXPO_PUBLIC_SUPABASE_URL=http://127.0.0.1:54340 somente nesse processo. Os dados privados em supabase/.temp não são versionados ou impressos. Modos: normal, read-fail, delay-read, before-POST, after-POST, after-PATCH, after-DELETE e reload-fail-PATCH. Conferir commit com verify **antes** de retry; comparar contadores; encerrar somente essa instância/proxy e executar cleanup. Não usar esse endpoint no app de uso humano/exportação. Não executar setup novamente sobre fixtures existentes.
+
+Os testes unitários acrescentados verificam decisões/estado, sem se apresentarem como prova de diálogo, armazenamento ou commit real. As provas de interface e dados acima complementam essas unidades. Races entre IDs/handlers também recebem testes determinísticos; atraso entre identidades tem prova adicional real.
+
+## Limpeza e pendências
+
+Harness compara baseline humana antes de excluir; remove linhas por ID + dono e contas somente pelos IDs criados por setup. Emails são selecionados pelos endereços exclusivos dessas fixtures, sem limpar Mailpit inteiro. Verificação posterior confirmou zero linhas dessas contas e baseline humana inalterada. JSON privado (senhas/IDs/baselines), arquivos de modo/contadores temporários e cópia provisória do transporte foram removidos. A sessão persistida da instância de prova também foi limpa pelo logout do aplicativo: com o transporte já desligado, a interface explicou que não podia confirmar revogação remota; um documento novo abriu diretamente o login sem sessão, comprovando a limpeza local. As contas já haviam sido removidas no serviço. Abas e processos criados nesta execução encerrados; 8081 preservado. Evidências públicas contêm somente fixtures fictícias, contadores e resultados, sem credenciais.
+
+**Nenhum F01–F14 obrigatório permanece pendente no marco web local.** As limitações de encerramento/histórico/rascunho descritas são limites reais da plataforma e do escopo. Android/APK, consulta financeira da SPEC-006, hospedado/backup/avaliação e refinamento visual próprio permanecem no plano. A V1 não está concluída.
