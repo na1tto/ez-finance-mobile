@@ -1,0 +1,7 @@
+# Cores de legendas e despesas — 08/10/2026
+
+Usuário solicitou verdes respectivos nas referências dos gráficos e verde escuro nos lançamentos de despesas para legibilidade. OverviewChart: legenda Receita Jade11 #208368 (versão para texto pequeno do verde das barras Jade9), Despesa Jade12 #1d3b31 (exatamente a barra escura). Família/tons existentes reutilizados; gráficos/escala/cálculos não alterados. ExpenseCard: tipo, categoria e data de despesa passam de Jade11 a Jade12; descrição/valor já usam Jade12 e permanecem. Receita conserva composição anterior. Sem tokens, assets ou dependências novos. Consumidores MonthlyOverview e previews reutilizam esses componentes.
+
+Chrome real com componentes de produção e dados fictícios em320/390/1280: cores computadas conferidas, receita preservada, despesas/metadata Jade12, sem overflow/exceções. Capturas revisadas: [320](assets/018-cores-graficos-lancamentos-320.png), [390](assets/018-cores-graficos-lancamentos-390.png), [1280](assets/018-cores-graficos-lancamentos-1280.png). Contraste sRGB contra superfície #fbfefd: Jade11 4,59:1; Jade12 12,02:1. Isso não declara conformidade integral de interface.
+
+Tipos aprovados. Harness removido, preview8083 encerrado; normal8081 mantido. Mudança somente de cores, sem nova campanha Auth/CRUD ou testes que espelham estilos. Android físico, zoom200% e leitor de tela não executados nesta entrega. Sem publicação.

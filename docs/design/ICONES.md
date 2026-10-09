@@ -1,5 +1,13 @@
 # Ícones
 
+## Minha conta — 08/10/2026
+
+Mesmos SVGs locais Phosphor core2.1.1 regular/MIT: user-circle40 no cabeçalho, lock/envelope20 em círculos40 nas ações. Decorativos com rótulos visíveis; lock representa acesso seguro, sem simular marca Google. Sem assets/dependências novos; licença/origem preservadas. Navegação continua24. Composição em revisão, Chrome320/390/1280 conferidos; Android pendente. [Evidências](../validacoes/014-refinamento-minha-conta.md).
+
+## Navegação do piloto — 08/10/2026
+
+Usuário autorizou barra e gesto usando a família documentada. Selecionados mais três SVGs oficiais Phosphor core2.1.1 regular: house (Início), receipt (Lançamentos), user-circle (Minha conta), 24px com nomes visíveis e tintColor Jade. Mesma distribuição MIT, sem pacote novo; licença/copyright já preservados. Agora cinco SVGs locais,1.926bytes. [Origem/hashes](../../assets/icons/phosphor/README.md). Chrome320/390/1280 conferiu carregamento, áreas de toque, teclado e seleção; composição aguardando aceite, aparelho Android pendente. [Evidências](../validacoes/011-navegacao-principal.md).
+
 ## Estado atual
 
 **Família compartilhada aprovada pelo usuário: Phosphor**, em 08/10/2026. Integração reutilizada nos AuthField existentes: dois SVGs oficiais core 2.1.1 via `expo-image` existente; detalhes/licenças ao final. Regular/20 px aprovados como parte da composição do piloto; conferidos nos consumidores. `expo-symbols` está instalado, sem uso encontrado nas telas analisadas. PNGs legados permanecem preservados e não definem a família do produto.

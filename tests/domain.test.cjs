@@ -5,11 +5,44 @@ const load = (file) => require(path.join(process.env.EZFINANCE_DOMAIN_BUILD, fil
 const money = load('domain/money.js');
 const dates = load('domain/dates.js');
 const domain = load('domain/transactions.js');
+const overview = load('domain/overview.js');
+test('Overview: native ring selects clockwise arcs and ignores center/outside/unrevealed points', () => {
+  const groups = [{id:'a',fraction:.5},{id:'b',fraction:.25},{id:'c',fraction:.25}];
+  assert.equal(overview.categoryAtRingPoint(groups,100,24),'a');
+  assert.equal(overview.categoryAtRingPoint(groups,176,100),'a');
+  assert.equal(overview.categoryAtRingPoint(groups,100,176),'b');
+  assert.equal(overview.categoryAtRingPoint(groups,24,100),'c');
+  for (const [x,y] of [[100,100],[100,0],[NaN,100]]) assert.equal(overview.categoryAtRingPoint(groups,x,y),null);
+  assert.equal(overview.categoryAtRingPoint(groups,24,100,.3),null);
+  assert.equal(overview.categoryAtRingPoint([],176,100),null);
+});
 const { transactionCategories } = load('constants/transactionCategories.js');
 const today = '2026-10-07';
 const input = (changes = {}) => ({ kind: 'expense', description: ' Teste ', amountCents: 3590,
   categoryId: 'expense-food', occurredOn: today, ...changes });
 const tx = (changes = {}) => ({ ...input(), id: 'local-test', userId: 'user-a', createdAt: '2026-10-07T12:00:00Z', ...changes });
+
+test('Overview: civil week boundaries, leap months and exact monthly totals', () => {
+  const rows = [tx({occurredOn:'2026-10-07',amountCents:10}),tx({occurredOn:'2026-10-08',amountCents:20}),
+    tx({occurredOn:'2026-10-31',amountCents:30,kind:'income',categoryId:'income-salary'}),tx({occurredOn:'2026-09-30',amountCents:99})];
+  const weeks = overview.weeklyActivity(rows,'2026-10');
+  assert.deepEqual(weeks.map(w=>w.label),['1–7','8–14','15–21','22–28','29–31']);
+  assert.deepEqual(weeks.map(w=>w.expenseCents),[10,20,0,0,0]);
+  assert.equal(weeks.reduce((total,w)=>total+w.incomeCents,0),30);
+  assert.equal(overview.weeklyActivity([],'2024-02').at(-1).label,'29–29');
+  assert.equal(overview.weeklyActivity([],'2026-02').at(-1).label,'22–28');
+  assert.equal(overview.weeklyActivity([],'9999-12').at(-1).label,'29–31');
+});
+test('Overview: category distribution uses only supplied type/filter and handles empty results', () => {
+  const rows = [tx({amountCents:10}),tx({amountCents:20}),tx({amountCents:70,categoryId:'expense-transport'}),
+    tx({kind:'income',categoryId:'income-salary',amountCents:200})];
+  const chart = overview.categoryActivity(rows,'expense');
+  assert.equal(chart.totalCents,100);
+  assert.deepEqual(chart.groups.map(g=>[g.id,g.amountCents,g.fraction]),[['expense-transport',70,0.7],['expense-food',30,0.3]]);
+  assert.equal(overview.categoryActivity(rows.filter(r=>r.categoryId==='expense-food'),'expense').groups[0].fraction,1);
+  assert.deepEqual(overview.categoryActivity([],'income'),{totalCents:0,groups:[]});
+  assert.equal(overview.categoryActivity(rows,'income').totalCents,200);
+});
 
 test('M01/M02: exact conversion and inclusive boundaries', () => {
   for (const [text, cents] of [['40',4000], ['32,50',3250], ['32.50',3250], ['0,1',10], ['0,01',1], ['999999,99',99999999], [' 00032,50 ',3250]]) {

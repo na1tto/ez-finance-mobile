@@ -13,10 +13,10 @@ export function ExpenseCard({ expense }: ExpenseCardProps) {
 	return (
 		<View style={styles.container}>
 			<View style={styles.details}>
-				<Text style={styles.category}>{expense.kind === 'income' ? 'Receita' : 'Despesa'}</Text>
+				<Text style={[styles.category, expense.kind === 'expense' && styles.expenseText]}>{expense.kind === 'income' ? 'Receita' : 'Despesa'}</Text>
 				<Text style={styles.description}>{expense.description}</Text>
 
-				<Text style={styles.category}>{transactionCategories.find(c => c.id === expense.categoryId)?.name} · {expense.occurredOn}</Text>
+				<Text style={[styles.category, expense.kind === 'expense' && styles.expenseText]}>{transactionCategories.find(c => c.id === expense.categoryId)?.name} · {expense.occurredOn}</Text>
 			</View>
 
 			<Text style={styles.value}>{formatBRL(expense.amountCents)}</Text>
@@ -25,6 +25,7 @@ export function ExpenseCard({ expense }: ExpenseCardProps) {
 }
 
 const styles = StyleSheet.create({
+	expenseText: { color: visual.text },
 	details: { flexGrow: 1, flexShrink: 1, flexBasis: 180, minWidth: 0 },
 	container: {
 		flexDirection: "row",

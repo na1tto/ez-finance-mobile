@@ -36,7 +36,7 @@ function main() {
       [path.join(__dirname, 'expo.cjs'), 'export', '--platform', 'web', '--clear'],
       { cwd: workspace, stdio: 'inherit', env: process.env });
     if (result.status !== 0) { process.exitCode = result.status ?? 1; return; }
-    for (const file of ['index.html', 'expenses/new.html', 'expenses/[id].html',
+    for (const file of ['index.html', 'transactions.html', 'auth/account.html', 'expenses/new.html', 'expenses/[id].html',
       'auth/callback.html', 'auth/reset-password.html', 'auth/sign-in.html', 'auth/sign-up.html']) {
       if (!fs.existsSync(path.join(workspace, 'dist', file))) {
         throw new Error(`Exportação incompleta: ${file} ausente.`);

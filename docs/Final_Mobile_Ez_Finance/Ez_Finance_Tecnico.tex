@@ -1,0 +1,569 @@
+\documentclass[
+    12pt,
+    oneside,
+    a4paper,
+    brazil
+]{abntex2}
+
+% ----------------------------------------------------------
+% PACOTES
+% ----------------------------------------------------------
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{indentfirst}
+\usepackage{microtype}
+\usepackage{graphicx}
+\usepackage{lastpage}
+\usepackage{float}
+\usepackage{amsmath,amssymb}
+\usepackage{setspace}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{bookmark}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{ragged2e}
+\usepackage{xcolor}
+\usepackage[alf]{abntex2cite}
+
+% ----------------------------------------------------------
+% CONFIGURAÇÕES GERAIS
+% ----------------------------------------------------------
+\hypersetup{
+    pdftitle={Ez Finance: Documentação Técnica},
+    pdfauthor={Luiz Eduardo Pereira Sousa},
+    pdfsubject={Arquitetura, regras de negócio e segurança da Ez Finance},
+    pdfcreator={LaTeX com abnTeX2},
+    pdfkeywords={Ez Finance, React Native, Expo, Supabase, PostgreSQL, segurança},
+    colorlinks=true,
+    linkcolor=black,
+    citecolor=black,
+    urlcolor=blue
+}
+
+\setlength{\parindent}{1.25cm}
+\setlength{\parskip}{0.2cm}
+\OnehalfSpacing
+
+% Insere o brasão quando o arquivo estiver disponível no projeto
+\newcommand{\brasao}{%
+\IfFileExists{Brasao_Uepa.jpg}{\includegraphics[width=2.2cm]{Brasao_Uepa.jpg}\\}{}
+}
+
+% ----------------------------------------------------------
+% DADOS DO TRABALHO
+% ----------------------------------------------------------
+\newcommand{\disciplina}{Programação Mobile}
+\newcommand{\semestreletivo}{2026/2}
+\newcommand{\professor}{Prof.\textsuperscript{a} MSc Jacqueline Teixeira}
+\newcommand{\tituloTrabalho}{Ez Finance: Documentação Técnica}
+
+\newcommand{\integrantesgrupo}{%
+LUIZ EDUARDO PEREIRA SOUSA
+}
+
+\titulo{\tituloTrabalho}
+\autor{Luiz Eduardo Pereira Sousa}
+\local{Parauapebas -- PA}
+\data{2026}
+
+\instituicao{%
+UNIVERSIDADE DO ESTADO DO PARÁ\\
+CENTRO DE CIÊNCIAS EXATAS E NATURAIS\\
+CURSO SUPERIOR DE BACHARELADO EM ENGENHARIA DE SOFTWARE
+}
+
+\tipotrabalho{Relatório técnico da aplicação Ez Finance, elaborado no contexto da disciplina de \disciplina, no semestre \semestreletivo, do Bacharelado em Engenharia de Software da Universidade do Estado do Pará. Abrange arquitetura, modelo de dados, regras de negócio, segurança e validação.}
+
+\preambulo{Professora: \professor}
+
+% ----------------------------------------------------------
+% INÍCIO DO DOCUMENTO
+% ----------------------------------------------------------
+\newcommand{\codigo}[1]{\texttt{\detokenize{#1}}}
+\newcommand{\caminho}[1]{{\small\nolinkurl{#1}}}
+\setlength{\emergencystretch}{3em}
+\begin{document}
+
+% ----------------------------------------------------------
+% CAPA
+% ----------------------------------------------------------
+\begin{capa}
+\begin{center}
+\brasao
+UNIVERSIDADE DO ESTADO DO PARÁ\\
+CENTRO DE CIÊNCIAS EXATAS E NATURAIS\\
+CURSO SUPERIOR DE BACHARELADO EM ENGENHARIA DE SOFTWARE\\[2cm]
+
+{\large \textbf{DISCIPLINA: \disciplina}}\\
+{\large \textbf{SEMESTRE: \semestreletivo}}\\[2cm]
+\integrantesgrupo\\[2cm]
+
+{\ABNTEXchapterfont\bfseries\Large \tituloTrabalho}\\[1.2cm]
+
+\vfill
+
+Parauapebas -- PA\\
+2026
+\end{center}
+\end{capa}
+
+% ----------------------------------------------------------
+% FOLHA DE ROSTO
+% ----------------------------------------------------------
+\begin{folhaderosto}
+\begin{center}
+\brasao
+UNIVERSIDADE DO ESTADO DO PARÁ\\
+CENTRO DE CIÊNCIAS EXATAS E NATURAIS\\
+CURSO SUPERIOR DE BACHARELADO EM ENGENHARIA DE SOFTWARE\\[3cm]
+
+{\ABNTEXchapterfont\bfseries\Large \tituloTrabalho}\\[1.5cm]
+
+\textbf{Discente:}\\[0.5cm]
+\integrantesgrupo
+\end{center}
+
+\vspace{1cm}
+
+\begin{flushright}
+\begin{minipage}{0.5\textwidth}
+\setlength{\parindent}{0pt}
+Relatório técnico da aplicação Ez Finance, elaborado no contexto da disciplina de \disciplina, no semestre \semestreletivo, do Bacharelado em Engenharia de Software da Universidade do Estado do Pará. Abrange arquitetura, modelo de dados, regras de negócio, segurança e validação.
+
+\vspace{0.8cm}
+Professora: \professor
+\end{minipage}
+\end{flushright}
+
+\vfill
+
+\begin{center}
+Parauapebas -- PA\\
+2026
+\end{center}
+\end{folhaderosto}
+
+% ----------------------------------------------------------
+% SUMÁRIO
+% ----------------------------------------------------------
+\pdfbookmark[0]{\contentsname}{toc}
+\tableofcontents*
+\cleardoublepage
+
+% ----------------------------------------------------------
+% ELEMENTOS TEXTUAIS
+% ----------------------------------------------------------
+\textual
+
+\chapter{Introdução}
+
+A Ez Finance é uma aplicação de controle financeiro pessoal destinada ao registro e à consulta de receitas e despesas de usuários individuais. Seu objetivo é oferecer uma visão dos lançamentos de determinado mês, com filtro por categoria e indicadores de receitas, despesas e saldo. O produto não representa uma conta bancária: o saldo apresentado corresponde à diferença entre receitas e despesas do conjunto consultado, sem saldo inicial ou integração bancária.
+
+O cliente utiliza React Native, Expo, TypeScript e Expo Router. O Supabase fornece PostgreSQL, autenticação e API de dados. O recorte validado é web; os marcos restantes são consolidados no capítulo Melhorias futuras.
+
+Este relatório descreve arquitetura, dados, regras de negócio, segurança, operação e validação a partir do código e dos registros disponíveis em 	extbf{8 de outubro de 2026}.
+
+\section{Método e fontes de informação}
+
+Foram confrontados o contexto do aplicativo, o plano de implementação, as especificações SPEC-001 a SPEC-007, os registros de validação e os arquivos de código, configuração e migração. Quando registros antigos e continuações posteriores diferem, este texto considera o registro posterior pertinente, preservando a distinção entre implementação e comprovação de execução.
+
+O apêndice relaciona as fontes internas. As referências oficiais fundamentam os mecanismos das plataformas; os resultados de execução provêm das campanhas registradas no projeto.
+
+\section{Convenção de estados}
+
+\begin{description}[style=nextline]
+\item[Aprovado] Requisito ou decisão expressamente registrado como aceito pelo responsável pelo projeto.
+\item[Implementado] Comportamento identificado no código ou na configuração versionada.
+\item[Validado] Comportamento com evidência de execução no ambiente indicado.
+\item[Pendente] Requisito, etapa ou prova ainda não concluído.
+\item[Fora do escopo atual] Funcionalidade adiada ou sem aprovação para a primeira versão.
+\end{description}
+
+\chapter{Caracterização do produto e requisitos}
+
+\section{Público e escopo funcional}
+
+O público aprovado é composto por outras pessoas, em uso individual, cada uma com sua própria conta e histórico. A autenticação é obrigatória. O núcleo funcional compreende cadastro, consulta, edição e exclusão de lançamentos, categorias fixas, seleção de mês e cálculo dos indicadores do período. O usuário pode acessar a aplicação com Google ou com email e senha, utilizando os serviços do Supabase Auth.
+
+As despesas utilizam as categorias Alimentação, Transporte, Lazer, Saúde, Educação e Outros. As receitas utilizam Salário, Trabalho extra, Rendimentos e Outras receitas. A delimitação das próximas entregas consta em Melhorias futuras.
+
+\section{Requisitos funcionais principais}
+
+\begin{longtable}{@{}p{0.12\textwidth}p{0.82\textwidth}@{}}
+\toprule
+\textbf{Código} & \textbf{Requisito} \\
+\midrule
+\endhead
+RF01 & Autenticar por Google ou email/senha; oferecer cadastro, confirmação de email, reenvio, recuperação e saída da sessão. \\
+RF02 & Registrar receita ou despesa com descrição, valor, categoria compatível e data efetiva. \\
+RF03 & Consultar lançamentos do mês selecionado e filtrar por uma categoria ou por todas. \\
+RF04 & Mostrar receitas, despesas e saldo correspondentes ao mesmo conjunto da lista. \\
+RF05 & Editar o lançamento autorizado, preservando identificador, proprietário e instante de criação. \\
+RF06 & Excluir somente após confirmação explícita na interface. \\
+RF07 & Alertar sobre saída com alterações não salvas e bloquear operações concorrentes no formulário. \\
+RF08 & Tratar indisponibilidade, preservar alterações em memória quando aplicável e oferecer nova tentativa sem presumir sucesso. \\
+\bottomrule
+\end{longtable}
+
+\section{Requisitos não funcionais e restrições}
+
+A solução deve assegurar isolamento por usuário, precisão monetária e persistência no servidor. As credenciais administrativas não podem integrar o aplicativo distribuído. O sistema depende de conectividade para autenticar, consultar e gravar; preservar um rascunho em memória durante uma falha não equivale a operar offline.
+
+A interface utiliza componentes React Native e estilos por \codigo{StyleSheet}, mantendo as convenções do projeto. A direção visual aprovada reúne Manrope, paleta Jade e feedbacks de erro Tomato.
+
+A hospedagem aprovada prioriza baixo volume e custo zero, com Firebase Hosting no plano Spark e Supabase no plano gratuito, conforme os registros do projeto. Essa decisão depende das condições dos serviços e não representa garantia permanente de custo ou disponibilidade. Nenhum plano pago ou automação de backup foi aprovado por inferência.
+
+\chapter{Arquitetura da solução}
+
+\section{Visão geral e fronteiras}
+
+A arquitetura separa apresentação, coordenação de estado, regras de domínio e acesso aos serviços. Não há servidor de aplicação próprio, ORM ou API de negócio adicional na estrutura ativa. O cliente usa o SDK Supabase para interagir com Auth e com a API de dados; a persistência e a autorização são executadas no PostgreSQL.
+
+\begin{figure}[H]
+\centering
+\fbox{\begin{minipage}{0.89\textwidth}
+\centering
+\textbf{Cliente web / base React Native para Android}\\[0.2cm]
+Telas e componentes $\longleftrightarrow$ Contexts e controllers\\
+Controllers $\longleftrightarrow$ domínio e repositório\\[0.2cm]
+$\downarrow$ SDK Supabase / requisições autenticadas $\downarrow$\\[0.2cm]
+\textbf{Serviços Supabase}\\
+Auth $\longleftrightarrow$ Google OAuth e envio de emails\\
+API de dados $\longleftrightarrow$ PostgreSQL: grants, RLS e constraints\\[0.2cm]
+\textbf{Distribuição web:} exportação estática Expo no Firebase Hosting
+\end{minipage}}
+\caption{Arquitetura lógica da aplicação.}
+\label{fig:arquitetura}
+\end{figure}
+
+O Firebase Hosting distribui os arquivos web. Firebase Auth e Firestore não fazem parte da arquitetura adotada. Autorização e integridade permanecem no servidor, complementando as verificações do cliente.
+
+\section{Tecnologias e versões declaradas}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{@{}p{0.38\textwidth}p{0.48\textwidth}@{}}
+\toprule
+\textbf{Tecnologia} & \textbf{Declaração em package.json} \\
+\midrule
+Expo & \codigo{~57.0.22} \\
+React Native & \codigo{0.86.3} \\
+React e React DOM & \codigo{19.2.3} \\
+Expo Router & \codigo{~57.0.21} \\
+TypeScript & \codigo{~6.0.3} \\
+Supabase JavaScript & \codigo{2.117.3} \\
+\bottomrule
+\end{tabular}
+\caption{Versões declaradas no recorte analisado; faixas não equivalem a versões imutáveis de futuras instalações.}
+\end{table}
+
+\section{Organização das camadas}
+
+\begin{longtable}{@{}p{0.28\textwidth}p{0.66\textwidth}@{}}
+\toprule
+\textbf{Camada / diretório} & \textbf{Responsabilidade} \\
+\midrule
+\endhead
+\codigo{src/app} & Rotas, telas, parâmetros e composição dos provedores. \\
+\codigo{src/components} & Formulário compartilhado, cards, confirmações e componentes visuais. \\
+\codigo{src/contexts} & Integração dos controllers à árvore React e exposição de estado autorizado. \\
+\codigo{src/domain} & Validação de dinheiro, datas, entradas e totais. \\
+\codigo{src/lib/auth} & Sessão, retorno de autenticação, recuperação e armazenamento por plataforma. \\
+\codigo{src/lib/transactions} & Consultas, mutações, reconciliação, estado financeiro e formulário. \\
+\codigo{src/config} & Leitura e validação das variáveis públicas de ambiente. \\
+\codigo{supabase/migrations} & Esquema, catálogo, constraints, triggers, privilégios e políticas de acesso. \\
+\codigo{scripts} & Execução, exportação, testes e backup. \\
+\bottomrule
+\end{longtable}
+
+O \codigo{AuthController} coordena o ciclo de autenticação. O \codigo{FinanceController} mantém a consulta financeira e seu contexto. O \codigo{TransactionFormController} controla rascunho, baseline, validação e operação pendente. O \codigo{TransactionRepository} traduz operações para a API e reconcilia respostas incertas. Os Contexts conectam esses objetos estáveis às telas por assinaturas de estado, sem introduzir uma biblioteca externa de gerenciamento global.
+
+\section{Navegação e apresentação}
+
+O layout raiz compõe \codigo{VisualProvider}, \codigo{AuthProvider} e \codigo{ExpensesProvider}. As rotas privadas são protegidas por \codigo{Stack.Protected}, conforme o estado de autenticação. A rota inicial apresenta a consulta; \codigo{/expenses/new} cria um lançamento e \codigo{/expenses/[id]} carrega um registro para edição. O nome legado ``expenses'' permanece nas rotas, embora o domínio ativo trate receitas e despesas.
+
+As rotas de autenticação abrangem entrada, cadastro, pedido de link, callback, recuperação de senha e conta. A recuperação possui estado restrito: um token obtido nesse fluxo não deve liberar imediatamente a área financeira. Proteção de rota é um controle de interface; a autorização de acesso aos dados continua sendo responsabilidade das políticas no PostgreSQL.
+
+\chapter{Modelo de dados e persistência}
+
+\section{Entidades e relacionamentos}
+
+O modelo financeiro possui duas tabelas próprias no esquema \codigo{public}: \codigo{categories} e \codigo{transactions}. A identidade é mantida pelo Supabase Auth em \codigo{auth.users}; não há tabela própria de perfil exigida pelo domínio financeiro atual. Um usuário pode possuir muitos lançamentos, e uma categoria pode classificar muitos lançamentos. A combinação de categoria e tipo deve existir no catálogo.
+
+\begin{longtable}{@{}p{0.22\textwidth}p{0.19\textwidth}p{0.53\textwidth}@{}}
+\toprule
+\textbf{Campo de transactions} & \textbf{Tipo SQL} & \textbf{Semântica} \\
+\midrule
+\endhead
+\codigo{id} & \codigo{uuid} & Chave primária; UUID estável da intenção de criação no fluxo do cliente. \\
+\codigo{user_id} & \codigo{uuid} & Proprietário, com padrão \codigo{auth.uid()} e referência a \codigo{auth.users}. \\
+\codigo{kind} & \codigo{text} & Apenas \codigo{income} ou \codigo{expense}. \\
+\codigo{description} & \codigo{text} & Descrição obrigatória, com espaços externos removidos. \\
+\codigo{amount_cents} & \codigo{integer} & Valor positivo de 1 a 99.999.999 centavos. \\
+\codigo{category_id} & \codigo{text} & Referência ao catálogo, validada junto com o tipo. \\
+\codigo{occurred_on} & \codigo{date} & Data civil efetiva do lançamento. \\
+\codigo{created_at} & \codigo{timestamptz} & Instante de criação definido pelo servidor e imutável na edição. \\
+\bottomrule
+\end{longtable}
+
+A tabela \codigo{categories} possui \codigo{id}, \codigo{kind} e \codigo{name}, com chave primária em \codigo{id} e unicidade de \codigo{(id, kind)}. A chave estrangeira composta em \codigo{transactions} impede que uma receita use categoria de despesa, e vice-versa. A referência ao usuário utiliza \codigo{ON DELETE RESTRICT}: remover uma identidade com lançamentos associados é impedido pela relação, sem excluir automaticamente o histórico financeiro. Não há fluxo de exclusão de conta implementado no escopo descrito.
+
+\section{Integridade no banco}
+
+As constraints verificam tipo, intervalo monetário, descrição e calendário suportado. Um trigger executado antes de inserções e atualizações rejeita datas futuras pela referência \codigo{America/Sao_Paulo}, normaliza a descrição e impede alteração de \codigo{id}, \codigo{user_id} e \codigo{created_at}. A validação temporal usa \codigo{statement_timestamp()}, inclusive quando a atualização altera apenas a descrição.
+
+O índice em \codigo{(user_id, occurred_on)} apoia o recorte por proprietário e data. Duas migrações versionadas constroem a base: a primeira define tabelas, catálogo, integridade e autorização; a segunda permite ao papel autenticado inserir o UUID operacional. A migração adicional não libera alteração da identidade do registro nem amplia a propriedade de linhas.
+
+\section{Contratos no cliente e consultas}
+
+O contrato \codigo{TransactionInput} contém apenas os campos editáveis. \codigo{Transaction} acrescenta identificador, proprietário e criação. \codigo{TransactionDraft} mantém o valor como texto para conservar a entrada durante validação. O repositório converte os campos SQL em snake\_case para os contratos TypeScript em camelCase e verifica o proprietário das respostas.
+
+As consultas usam filtros de proprietário, mês e categoria, ordenados por data efetiva e UUID em ordem decrescente. O repositório admite filtro técnico por tipo, mas a seleção de tipo não foi acrescentada como filtro de produto da consulta mensal. A página técnica padrão possui 200 registros; o serviço local está configurado com teto de 1.000 linhas por resposta. A leitura avança por cursor até receber página vazia, evitando considerar uma página curta como fim obrigatório.
+
+Os totais são calculados somente após obter o conjunto completo. Se uma página falha, o resultado parcial não é publicado como consulta concluída. A paginação não oferece snapshot entre requisições nem atualização Realtime; alterações externas exigem nova consulta.
+
+\chapter{Regras de negócio}
+
+\section{Valores monetários}
+
+A moeda adotada é o real brasileiro (BRL). Cada lançamento armazena centavos inteiros entre R\$~0,01 e R\$~999.999,99. A entrada aceita números sem separador de milhar, com vírgula ou ponto decimal e até duas casas. Espaços nas extremidades são removidos. Zero, negativos, notação exponencial, valores não finitos, separadores de milhar e mais de duas casas são rejeitados, sem arredondamento silencioso.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{@{}p{0.30\textwidth}p{0.56\textwidth}@{}}
+\toprule
+\textbf{Entrada} & \textbf{Resultado} \\
+\midrule
+\codigo{35,90} ou \codigo{35.90} & 3.590 centavos; aceita. \\
+\codigo{35} & 3.500 centavos; aceita. \\
+\codigo{0,01} & 1 centavo; aceita. \\
+\codigo{1.234,56} & Rejeitada: separador de milhar. \\
+\codigo{10,999} & Rejeitada: três casas decimais. \\
+\codigo{0}, \codigo{-1} ou \codigo{1000000} & Rejeitadas: fora do intervalo permitido. \\
+\bottomrule
+\end{tabular}
+\caption{Exemplos derivados da validação monetária do domínio.}
+\end{table}
+
+A conversão utiliza \codigo{BigInt} antes de produzir um inteiro seguro em JavaScript. A soma verifica \codigo{Number.isSafeInteger}; o teto de um lançamento não limita o total agregado ao mesmo valor. A formatação em BRL é feita diretamente sobre os dígitos inteiros e admite saldo negativo, evitando cálculos monetários com frações binárias.
+
+\section{Datas e período financeiro}
+
+A data efetiva é uma data civil no formato \codigo{YYYY-MM-DD}, distinta do instante de criação. O padrão inicial é hoje em São Paulo e pode ser alterado para uma data passada. Datas inexistentes, como 31 de fevereiro, e datas futuras não são aceitas. O domínio considera anos bissextos e o intervalo de anos de 0001 a 9999. O banco repete a restrição de futuro com seu próprio relógio; o cliente não é a autoridade temporal final da gravação.
+
+A consulta começa no mês atual. Seu intervalo inclui o primeiro dia do mês e exclui o primeiro dia do mês seguinte. Por exemplo, outubro de 2026 corresponde a \codigo{2026-10-01} até antes de \codigo{2026-11-01}. O domínio trata o extremo dezembro de 9999 sem produzir um ano fora do calendário suportado.
+
+\section{Indicadores e filtro}
+
+Seja $Q$ o conjunto autorizado do mês e da categoria selecionados. Os indicadores são definidos em centavos por:
+\begin{align}
+R(Q) &= \sum_{t \in Q,\;t.tipo=\mathrm{receita}} t.valor,\\
+D(Q) &= \sum_{t \in Q,\;t.tipo=\mathrm{despesa}} t.valor,\\
+S(Q) &= R(Q)-D(Q).
+\end{align}
+
+Lista e indicadores usam o mesmo contexto confirmado. Com ``Todas'', o conjunto inclui as duas naturezas; uma categoria específica restringe também os totais. Como as categorias pertencem a um único tipo, filtrar Alimentação, por exemplo, produz receitas iguais a zero nesse recorte. Isso não representa ausência de receitas em todo o mês. Consulta vazia confirmada gera zeros; falha de consulta não deve ser apresentada como histórico vazio.
+
+\section{Cadastro, edição e exclusão}
+
+A descrição é obrigatória após normalização; o tipo deve ser receita ou despesa e a categoria deve ser compatível. Trocar o tipo no formulário limpa a categoria para exigir nova seleção. A edição lê o registro autorizado antes de construir sua baseline e distingue carregamento, falha, nova tentativa e registro ausente ou indisponível.
+
+Salvar altera somente os campos editáveis. A exclusão identifica o registro salvo e requer confirmação; cancelar mantém o lançamento e as alterações do formulário. A aplicação retorna ao destino de consulta após confirmação da mutação, distinguindo sucesso da gravação de uma eventual falha na atualização da lista.
+
+\chapter{Estado, falhas e consistência das operações}
+
+\section{Escopo de identidade e concorrência}
+
+Os controllers mantêm proprietário validado e contadores de geração ou revisão. Uma resposta iniciada antes de logout, troca de conta ou entrada em recuperação não pode repovoar a interface da identidade posterior. Os provedores também mascaram resultados e formulários antes de expor estado incompatível com a sessão atual.
+
+O repositório obtém o token do SDK, confere novamente o proprietário e fixa o cabeçalho de autorização daquela requisição. Esse cuidado evita que uma intenção da conta A seja enviada com a sessão da conta B durante uma troca concorrente de autenticação. A serialização das mutações por usuário e UUID ordena operações no mesmo registro dentro da instância do cliente; ela não é um bloqueio distribuído entre aparelhos.
+
+\section{Resultado incerto e prevenção de duplicações}
+
+Falha de rede ou timeout não demonstra que a gravação deixou de ocorrer. O repositório utiliza timeout de 15 segundos por requisição e diferencia indisponibilidade de leitura, entrada inválida, conflito, falta de autorização e resultado incerto de escrita.
+
+Na criação, o cliente congela o payload e gera um UUID estável. Antes de inserir ou repetir, consulta esse UUID no escopo autorizado. Se a linha existe com os mesmos campos, confirma o resultado; se diverge, sinaliza conflito. A chave primária impede duplicação do mesmo identificador. A retomada não gera silenciosamente outra identidade para resolver a incerteza.
+
+Na edição, uma atualização incerta é lembrada em memória; a nova tentativa lê a linha e compara com o payload congelado antes de repetir. Na exclusão incerta, a ausência posterior do registro pode confirmar a remoção anterior sem um segundo DELETE. Esses mecanismos reduzem duplicações e repetição desnecessária, mas não fornecem garantia geral de execução exatamente uma vez após encerramento do cliente.
+
+Não há versionamento para impedir sobrescrita entre dispositivos. A baseline e a reconciliação têm escopo local; sua memória é removida na troca de identidade.
+
+\section{Proteção de alterações e estados de leitura}
+
+O formulário compara os campos com a baseline, incluindo texto inválido. Valores monetários válidos equivalentes não causam aviso falso apenas por diferença entre vírgula e ponto. Saída voluntária com alterações oferece continuar ou descartar, sem autosave. Operações em andamento ou incertas bloqueiam alterações incompatíveis e mantêm a intenção até verificação.
+
+Na web, \codigo{beforeunload} e proteção de histórico complementam a navegação interna. O navegador controla o aviso ao recarregar ou fechar. Rascunhos não sobrevivem ao encerramento do cliente. O bloqueio de travessia pode substituir a ramificação adiante do histórico.
+
+Durante carregamento, resultados são ocultados; em falha de leitura, a última consulta completa da mesma conta pode ser preservada com contexto e aviso. Seleção solicitada e consulta confirmada são distintas, evitando rotular dados antigos como resultado de um filtro novo. O retry usa a seleção atual. Logout, recuperação e troca de proprietário prevalecem sobre a preservação de campos privados.
+
+\chapter{Autenticação, autorização e segurança}
+
+\section{Métodos de autenticação e PKCE}
+
+O Google é a opção principal por OAuth 2.0 Authorization Code Flow com PKCE, intermediado pelo Supabase Auth. Email e senha constituem um fluxo distinto, também no Auth, com confirmação de email, reenvio e recuperação por link. PKCE correlaciona a troca do código ao verificador mantido pelo cliente que iniciou o fluxo \cite{supabasePkce}.
+
+O cliente é criado com \codigo{flowType: pkce} e \codigo{detectSessionInUrl: false}; o retorno é processado explicitamente. Uma tentativa pendente registra identificador aleatório, finalidade, instante e, quando aplicável, identidade esperada. Sua validade local é de uma hora; esse limite não substitui a expiração do código no serviço. O parser confere protocolo, host, caminho, tentativa e código, rejeitando fragmentos e parâmetros ambíguos.
+
+Links devem ser abertos no mesmo navegador ou dispositivo que iniciou o pedido. O registro hospedado mostra rejeição de uma recuperação aberta em outro navegador e posterior conclusão no navegador correto. Essa restrição decorre do contrato de tentativa e verificador, sem enfraquecer a proteção para facilitar o retorno.
+
+Na web, \codigo{navigator.locks} coordena operações Auth entre abas; sua ausência produz erro explícito. No código nativo, o adapter utiliza Expo WebBrowser, Expo Crypto e deep links \codigo{ezfinance://}. Esses adapters compõem a preparação nativa.
+
+\section{Sessão, recuperação e vínculo de métodos}
+
+Os estados Auth são restauração, desconectado, autenticado, recuperação e indisponível. Uma sessão armazenada não basta para liberar o conteúdo: o controller consulta \codigo{getUser}, verifica identidade e confirmação de email e avalia o marcador de recuperação. Falha de serviço restringe acesso e oferece retry.
+
+O armazenamento web utiliza \codigo{localStorage}. A chave é derivada do endpoint completo para separar projetos. Tokens nesse armazenamento continuam acessíveis ao contexto JavaScript da origem; o código não implementa uma sessão com cookie HttpOnly. Portanto, a qualidade do código entregue à origem e a prevenção de execução indevida de scripts permanecem relevantes.
+
+No nativo, SecureStore mantém chunks protegidos e um manifesto gravado ao final, sem fallback para armazenamento comum. 
+
+O vínculo de métodos é delegado ao Supabase Auth para identidades verificadas; a aplicação não funde históricos por comparação simples de emails. Uma identidade esperada na tentativa impede aceitar inadvertidamente outra conta no retorno. O fluxo de senha para conta originalmente Google passa pela recuperação; métodos da mesma identidade preservam o mesmo \codigo{user_id} financeiro.
+
+Atualizar senha no estado de recuperação encerra a sessão e pede nova entrada. O logout usa \codigo{scope: local}, bloqueia imediatamente o acesso no cliente e remove sessão, marcadores e verificadores. Não promete desconectar todos os dispositivos ou revogar instantaneamente cada access token já emitido. Falha de limpeza ou revogação produz mensagem específica.
+
+\section{Autorização no PostgreSQL}
+
+As duas tabelas financeiras possuem Row Level Security (RLS). Grants definem as operações permitidas ao papel; políticas restringem as linhas acessíveis, mecanismos complementares no PostgreSQL \cite{supabaseRls}.
+
+\begin{longtable}{@{}p{0.23\textwidth}p{0.71\textwidth}@{}}
+\toprule
+\textbf{Operação} & \textbf{Controle implementado} \\
+\midrule
+\endhead
+Catálogo & SELECT apenas para autenticados, sem edição de categorias pelo cliente. \\
+Leitura financeira & SELECT somente quando \codigo{auth.uid() = user_id}. \\
+Inserção & WITH CHECK exige proprietário igual à identidade autenticada. \\
+Atualização & USING e WITH CHECK preservam o dono; grant limita os campos editáveis. \\
+Exclusão & DELETE limitado ao proprietário pela política correspondente. \\
+Identidade & Trigger impede alteração de ID, proprietário e criação. \\
+\bottomrule
+\end{longtable}
+
+Os privilégios padrão são revogados antes dos grants específicos. O papel anônimo não recebe acesso às tabelas. Filtros de usuário no repositório acrescentam defesa no cliente, mas não substituem a RLS. A função de validação utiliza \codigo{security invoker} e \codigo{search_path} vazio; sua execução direta é revogada dos papéis comuns, permanecendo vinculada ao trigger.
+
+\section{Ambiente público, credenciais e distribuição}
+
+O cliente recebe \codigo{EXPO_PUBLIC_SUPABASE_URL} e \codigo{EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY}. O validador admite chave publishable ou JWT legado com papel anon e rejeita chaves administrativas reconhecidas. Valores públicos Expo são incorporados ao bundle; um arquivo \codigo{.env} não transforma esses valores em segredos \cite{expoEnv}.
+
+Senhas do banco, segredo Google, chave administrativa e credenciais SMTP pertencem à configuração de servidor ou a armazenamento privado. O documento não inclui seus valores nem dumps de banco. A chave pública identifica a integração; a autorização de dados depende da sessão e das políticas, e não de ocultar essa chave.
+
+O Hosting configura \codigo{X-Content-Type-Options: nosniff}, \codigo{Referrer-Policy: no-referrer} e \codigo{Cache-Control: no-cache}. Não há Content Security Policy definida no arquivo analisado. Os headers presentes são controles parciais e não permitem afirmar segurança web integral. Tampouco foi identificada cifragem de campo financeiro implementada pela aplicação ou autenticação multifator como requisito entregue.
+
+\chapter{Ambientes, hospedagem e continuidade}
+
+\section{Desenvolvimento e publicação web}
+
+O desenvolvimento utiliza a stack local Supabase em Docker, incluindo PostgreSQL e Auth. Dados fictícios e contas locais não foram importados para o ambiente hospedado. A configuração é separada por ambiente, e os scripts de execução verificam as variáveis públicas antes do empacotamento.
+
+A web utiliza saída estática do Expo, publicada no Firebase Hosting, serviço de distribuição de conteúdo web \cite{firebaseHosting}. O arquivo \codigo{firebase.json} define URLs limpas, tratamento de rotas de edição por ID e headers. O hook de publicação executa uma nova exportação.
+
+Um registro de validação identificou bundle com endpoint local retido por cache, apesar de configuração inicial correta. O script \codigo{build-hosted-web.cjs} passou a exportar com limpeza de cache e a conferir URL e chave pública nos bundles finais, recusando endpoint local e divergência de configuração. Conferir somente o arquivo de ambiente mostrou-se insuficiente; o artefato distribuído também precisa ser inspecionado.
+
+O endereço registrado para avaliação técnica é \url{https://ez-finance-7c789.web.app}. Os documentos relatam publicação de 11 rotas e conferência do hash do bundle remoto contra o local. 
+
+\section{Backup e restauração}
+
+O script \codigo{backup-hosted.cjs} verifica o projeto vinculado e gera \codigo{roles.sql}, \codigo{schema.sql}, \codigo{data.sql} e \codigo{manifest.json}, com hashes SHA-256. A cópia abrange os esquemas public, auth e histórico de migrações. O staging em \codigo{.expo} é ignorado pelo Git e não é destino permanente.
+
+Os backups são \textbf{manuais, sem frequência ou retenção definida}, por decisão registrada. A primeira cópia externa foi enviada para uma pasta privada no Google Drive, com permissões e integridade conferidas por download. O ZIP depende das permissões e da segurança da conta Drive; não possui cifragem adicional. Dumps Auth podem conter hashes de senhas, identidades e material de sessão e devem ser tratados como sensíveis.
+
+A exportação de schema e dados ocorre em etapas distintas, sem snapshot atômico entre arquivos. O procedimento orienta interromper gravações e migrações concorrentes durante a captura operacional. Configurações OAuth/SMTP, credenciais externas e arquivos Storage não são recuperados por esse script. A documentação oficial também diferencia backup do banco de outras partes da plataforma \cite{supabaseBackups}.
+
+O ensaio registrado restaurou SQL em PostgreSQL isolado e comprovou catálogo, lançamentos fictícios, vínculo estrutural de identidades, histórico, RLS e isolamento. O ensaio comprova restauração estrutural de dados e políticas, não recuperação integral do serviço Auth.
+
+O procedimento não estabelece objetivos mensuráveis de perda máxima de dados (RPO) ou tempo de recuperação (RTO).
+
+\chapter{Validação, evidências e limitações}
+
+\section{Estratégia de testes}
+
+O projeto combina testes de domínio e controllers, integração com Auth e API reais, testes SQL e inspeção no navegador. Os scripts \codigo{npm test}, \codigo{npm run test:auth}, \codigo{npm run test:finance}, \codigo{npm run test:hosting} e \codigo{npm run typecheck} correspondem a verificações distintas; executar um deles não implica executar todas as integrações.
+
+Os testes locais cobrem dinheiro, datas, catálogo, autorização, persistência, callbacks, troca de identidade, proteção de alterações e reconciliação antes e após commit. Fixtures foram removidas por identidade e IDs conhecidos, preservando dados humanos.
+
+As quantidades variam conforme a revisão: a fundação/persistência registra 63 verificações SQL; os registros posteriores relatam 50 testes da aplicação, rodadas de 50 testes Auth e financeiros e dois testes de proteção do Hosting. As contagens referem-se a campanhas distintas, sem representar casos únicos somados.
+
+\section{Matriz de estado no recorte}
+
+\begin{longtable}{@{}p{0.27\textwidth}p{0.67\textwidth}@{}}
+\toprule
+\textbf{Área} & \textbf{Estado e limite da evidência} \\
+\midrule
+\endhead
+Fundação de dados & Schema, constraints, RLS e migrações implementados e validados localmente; migrações e provas SQL remotas registradas. \\
+Autenticação local & Fluxos web, vínculo de métodos, confirmação, recuperação e isolamento validados. \\
+CRUD local & Cadastro, edição, exclusão e persistência comprovados com falhas e reconciliação. \\
+Consulta mensal & Mês, categoria e totais do mesmo recorte validados na web local. \\
+Hospedagem & Firebase publicado e bundles/rotas conferidos, conforme evidências registradas. \\
+Auth hospedado & Google, persistência após reload e recuperação/senha para a mesma conta comprovados. \\
+CRUD hospedado & Criação, leitura, edição e exclusão fictícias comprovadas para uma conta. \\
+Backup & Cópia privada, integridade por hash e restauração SQL comprovadas. \\
+Interface & Piloto e expansão Jade aprovados; estados, larguras e zoom documentados. \\
+Base Android & Adapters de armazenamento, criptografia e retorno de autenticação implementados. \\
+\bottomrule
+\end{longtable}
+
+\section{Evidências de interface e acessibilidade}
+
+O refinamento visual registra inspeções em 320, 390 e 1280 pixels de largura, conteúdo longo, Tab/Enter, rótulos, foco, confirmações e feedbacks. O zoom real de 200\% foi confirmado manualmente pelo usuário. Esses resultados não equivalem a teste integral com leitor de tela ou a comprovação no Android.
+
+Feedbacks de erro utilizam Tomato 11/2/9, com contraste textual registrado de 4,75:1. As evidências cobrem o recorte web descrito.
+
+\chapter{Melhorias futuras}
+
+\section{Pendências da primeira versão}
+
+As seguintes entregas pertencem ao escopo aprovado e permanecem necessárias para concluir a V1:
+\begin{enumerate}[leftmargin=*, itemsep=0.25em]
+\item \textbf{Autenticação hospedada:} concluir a prova de cadastro por email, confirmação e reenvio no ambiente final.
+\item \textbf{Isolamento hospedado:} verificar acesso financeiro com duas contas e JWT reais no destino, complementando as provas locais e SQL remotas.
+\item \textbf{Recuperação completa:} validar login email/senha e Google após restauração, vínculo real, renovação/revogação de sessões e reconfiguração dos serviços externos.
+\item \textbf{Android/APK:} gerar, instalar e validar autenticação, deep links, SecureStore, CRUD, filtros, teclado, ampliação de fontes e reabertura no aparelho.
+\item \textbf{Acessibilidade:} resolver o contraste não textual das bordas Jade 7/8 no critério R03, registrado abaixo de 3:1. Testes com leitor de tela e validação nativa ainda não foram executados; não há declaração de conformidade WCAG integral.
+\end{enumerate}
+
+\section{Decisões operacionais em aberto}
+
+Os backups são manuais por decisão aprovada. Frequência, retenção, RPO e RTO não foram definidos; sua definição exige decisão operacional específica. A cópia privada e o ensaio SQL não encerram o requisito de recuperação integral.
+
+\section{Evoluções fora do escopo aprovado}
+
+Orçamento, categorias personalizadas, gráficos, importação/exportação pela interface, sincronização offline, iOS, publicação em lojas e monetização não são entregas confirmadas da V1. Dependem de priorização e aprovação próprias.
+
+Eventuais mecanismos de edição concorrente entre dispositivos, Content Security Policy e revisão ampliada de privacidade e segurança também exigem avaliação específica. Este relatório não constitui teste de invasão ou certificação de conformidade e não aprova essas extensões.
+
+\chapter{Considerações finais}
+
+A Ez Finance apresenta um núcleo de controle financeiro implementado com separação entre apresentação, domínio, coordenação de estado e persistência. A combinação de centavos inteiros, data civil, constraints e autorização por proprietário sustenta a integridade das operações. A reconciliação de mutações incertas e o descarte de respostas obsoletas tratam riscos concretos de rede e troca de sessão.
+
+Os registros demonstram validação web local e ciclo Auth/CRUD hospedado para uma conta. A conclusão da V1 depende dos itens consolidados em Melhorias futuras.
+
+\appendix
+\chapter{Rastreabilidade e manutenção do relatório}
+
+\begin{longtable}{@{}p{0.25\textwidth}p{0.69\textwidth}@{}}
+\toprule
+\textbf{Tema} & \textbf{Fontes primárias no repositório} \\
+\midrule
+\endhead
+Escopo e decisões & \caminho{docs/CONTEXTO_APP.md}; \caminho{docs/PLANO_IMPLEMENTACAO.md}; especificações em \caminho{docs/specs/}. \\
+Dinheiro e datas & \caminho{src/domain/money.ts}; \caminho{src/domain/dates.ts}; \caminho{src/domain/transactions.ts}. \\
+Contratos e catálogo & \caminho{src/types/transaction.ts}; \caminho{src/constants/transactionCategories.ts}. \\
+Esquema e autorização & \caminho{supabase/migrations/20261007000100_financial_foundation.sql}; \caminho{supabase/migrations/20261008000100_transaction_intent_id.sql}. \\
+Persistência e formulário & \caminho{src/lib/transactions/repository.ts}; \caminho{src/lib/transactions/controller.ts}; \caminho{src/lib/transactions/form.ts}. \\
+Auth e sessão & \caminho{src/lib/auth/controller.ts}; \caminho{src/lib/auth/contracts.ts}; \caminho{src/lib/auth/platform.ts}; \caminho{src/lib/auth/storage.ts}. \\
+Integração e rotas & \caminho{src/contexts/AuthContext.tsx}; \caminho{src/contexts/ExpensesContext.tsx}; \caminho{src/app/_layout.tsx}. \\
+Ambiente & \caminho{src/config/supabase.ts}; \caminho{src/lib/supabase/client.ts}; \caminho{supabase/config.toml}. \\
+Hospedagem & \caminho{docs/HOSPEDAGEM.md}; \caminho{firebase.json}; \caminho{scripts/build-hosted-web.cjs}. \\
+Backup & \caminho{docs/BACKUP.md}; \caminho{scripts/backup-hosted.cjs}. \\
+Provas e interface & \caminho{docs/validacoes/001-supabase-local.md} a \caminho{docs/validacoes/007-refinamento-visual.md}; \caminho{docs/design/SISTEMA_VISUAL.md}. \\
+\bottomrule
+\end{longtable}
+
+Os caminhos são relativos à raiz do repositório. Atualizações devem confrontar código e evidências e revisar a data de corte, sem incluir credenciais ou dados privados.
+
+\postextual
+\bibliography{referencias-tecnicas}
+\end{document}

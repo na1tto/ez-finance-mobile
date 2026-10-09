@@ -74,7 +74,7 @@ export function TransactionForm({ id }: { id?: string }) {
     {!ready ? <>
       {state.phase === 'loading' || !matched ? <Text accessibilityLiveRegion="polite">Carregando lançamento…</Text> : <ErrorFeedback>{state.message}</ErrorFeedback>}
       {matched && state.phase === 'error' && <Button title="Tentar carregar lançamento" onPress={() => void form.beginEdit(id!, true)} />}
-      <Button title="Voltar à lista" onPress={() => askLeave(() => router.replace('/'))} />
+      <Button title="Voltar à lista" onPress={() => askLeave(() => router.replace('/transactions'))} />
     </> : <>
       <View style={styles.types}>{(['expense', 'income'] as const).map(kind => <Pressable key={kind} accessibilityRole="radio"
         aria-checked={draft.kind === kind} accessibilityState={{ checked: draft.kind === kind, disabled: locked }} disabled={locked} onPress={() => form.setDraft({ kind })}
@@ -104,7 +104,7 @@ export function TransactionForm({ id }: { id?: string }) {
       {state.pending?.kind === 'delete' ? <Button title="Verificar e tentar exclusão" onPress={() => void remove(form.token())} disabled={working} />
         : <Button title={working ? 'Confirmando gravação…' : state.pending ? 'Verificar e tentar novamente' : 'Salvar lançamento'}
           disabled={working || !financial.categories.length || (state.mode === 'edit' && !dirty && !state.pending)} onPress={() => void save()} />}
-      <Button title="Cancelar e voltar à lista" disabled={working} onPress={() => askLeave(() => router.replace('/'))} />
+      <Button title="Cancelar e voltar à lista" disabled={working} onPress={() => askLeave(() => router.replace('/transactions'))} />
       <Button title="Minha conta" disabled={working} onPress={() => askLeave(() => router.push('/auth/account'))} />
       <Button title="Sair deste dispositivo" disabled={working} onPress={() => askLeave(() => { void auth.logout(); })} />
       {state.baseline && !state.pending && <Pressable accessibilityRole="button" disabled={working} style={styles.delete}

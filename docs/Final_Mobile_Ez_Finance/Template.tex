@@ -1,0 +1,303 @@
+\documentclass[
+    12pt,
+    oneside,
+    a4paper,
+    brazil
+]{abntex2}
+
+% ----------------------------------------------------------
+% PACOTES
+% ----------------------------------------------------------
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{indentfirst}
+\usepackage{microtype}
+\usepackage{graphicx}
+\usepackage{lastpage}
+\usepackage{float}
+\usepackage{amsmath,amssymb}
+\usepackage{setspace}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{bookmark}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{ragged2e}
+\usepackage{xcolor}
+\usepackage[alf]{abntex2cite}
+
+% ----------------------------------------------------------
+% CONFIGURAÇÕES GERAIS
+% ----------------------------------------------------------
+\hypersetup{
+    pdftitle={Revisão Programação Mobile},
+    pdfauthor={Luiz Eduardo Pereira Sousa},
+    pdfsubject={Disciplina de Programação Mobile},
+    pdfcreator={LaTeX com abnTeX2},
+    pdfkeywords={ABNT, Programação Mobile, computação móvel, React Native, Expo, navegação, gerenciamento de estado, UEPA},
+    colorlinks=true,
+    linkcolor=black,
+    citecolor=black,
+    urlcolor=blue
+}
+
+\setlength{\parindent}{1.25cm}
+\setlength{\parskip}{0.2cm}
+\OnehalfSpacing
+
+% Destaque para as perguntas da atividade dentro do texto
+\newcommand{\pergunta}[2]{%
+\begin{quote}
+\noindent\textbf{Pergunta #1 -- #2}
+\end{quote}}
+
+% Identificação visual das respostas
+\newcommand{\resposta}{%
+\par\noindent\textbf{Resposta.}\hspace{0.3em}
+}
+
+% Insere o brasão quando o arquivo estiver disponível no projeto
+\newcommand{\brasao}{%
+\IfFileExists{Brasao_Uepa.jpg}{\includegraphics[width=2.2cm]{Brasao_Uepa.jpg}\\}{}
+}
+
+% ----------------------------------------------------------
+% DADOS DO TRABALHO
+% ----------------------------------------------------------
+\newcommand{\disciplina}{Programação Mobile}
+\newcommand{\semestreletivo}{2026/2}
+\newcommand{\professor}{Prof.\textsuperscript{a} MSc Jacqueline Teixeira}
+\newcommand{\tituloTrabalho}{Revisão Programação Mobile}
+
+\newcommand{\integrantesgrupo}{%
+LUIZ EDUARDO PEREIRA SOUSA
+}
+
+\titulo{\tituloTrabalho}
+\autor{Luiz Eduardo Pereira Sousa}
+\local{Parauapebas -- PA}
+\data{2026}
+
+\instituicao{%
+UNIVERSIDADE DO ESTADO DO PARÁ\\
+CENTRO DE CIÊNCIAS EXATAS E NATURAIS\\
+CURSO SUPERIOR DE BACHARELADO EM ENGENHARIA DE SOFTWARE
+}
+
+\tipotrabalho{Atividade avaliativa individual apresentada à disciplina de \disciplina, no semestre \semestreletivo, do Bacharelado em Engenharia de Software da Universidade do Estado do Pará, consistindo na resolução de dez questões de revisão sobre os fundamentos da programação para dispositivos móveis.}
+
+\preambulo{Professora: \professor}
+
+% ----------------------------------------------------------
+% INÍCIO DO DOCUMENTO
+% ----------------------------------------------------------
+\begin{document}
+
+% ----------------------------------------------------------
+% CAPA
+% ----------------------------------------------------------
+\begin{capa}
+\begin{center}
+\brasao
+UNIVERSIDADE DO ESTADO DO PARÁ\\
+CENTRO DE CIÊNCIAS EXATAS E NATURAIS\\
+CURSO SUPERIOR DE BACHARELADO EM ENGENHARIA DE SOFTWARE\\[2cm]
+
+{\large \textbf{DISCIPLINA: \disciplina}}\\
+{\large \textbf{SEMESTRE: \semestreletivo}}\\[4.5cm]
+
+{\ABNTEXchapterfont\bfseries\Large \tituloTrabalho}\\[1.2cm]
+
+\vfill
+
+Parauapebas -- PA\\
+2026
+\end{center}
+\end{capa}
+
+% ----------------------------------------------------------
+% FOLHA DE ROSTO
+% ----------------------------------------------------------
+\begin{folhaderosto}
+\begin{center}
+\brasao
+UNIVERSIDADE DO ESTADO DO PARÁ\\
+CENTRO DE CIÊNCIAS EXATAS E NATURAIS\\
+CURSO SUPERIOR DE BACHARELADO EM ENGENHARIA DE SOFTWARE\\[3cm]
+
+{\ABNTEXchapterfont\bfseries\Large \tituloTrabalho}\\[1.5cm]
+
+\textbf{Discente:}\\[0.5cm]
+\integrantesgrupo
+\end{center}
+
+\vspace{1cm}
+
+\begin{flushright}
+\begin{minipage}{0.5\textwidth}
+\setlength{\parindent}{0pt}
+Atividade avaliativa individual apresentada à disciplina de \disciplina, no semestre \semestreletivo, do Bacharelado em Engenharia de Software da Universidade do Estado do Pará, consistindo na resolução de dez questões de revisão sobre os fundamentos da programação para dispositivos móveis.
+
+\vspace{0.8cm}
+Professora: \professor
+\end{minipage}
+\end{flushright}
+
+\vfill
+
+\begin{center}
+Parauapebas -- PA\\
+2026
+\end{center}
+\end{folhaderosto}
+
+% ----------------------------------------------------------
+% SUMÁRIO
+% ----------------------------------------------------------
+\pdfbookmark[0]{\contentsname}{toc}
+\tableofcontents*
+\cleardoublepage
+
+% ----------------------------------------------------------
+% ELEMENTOS TEXTUAIS
+% ----------------------------------------------------------
+\textual
+
+\chapter{Introdução}
+
+Esta atividade avaliativa individual, proposta na disciplina de \disciplina, reúne dez questões de revisão sobre os principais conceitos relacionados ao desenvolvimento de aplicações para dispositivos móveis. O trabalho aborda computação móvel, características dos dispositivos, sistemas operacionais, estratégias de desenvolvimento, computação ubíqua e pervasiva, ambiente de desenvolvimento, React Native, Expo, componentes, layouts, eventos, navegação e gerenciamento de estado.
+
+As seções seguintes foram organizadas de acordo com a ordem e os temas apresentados no enunciado da atividade. As respostas foram fundamentadas em publicações do IEEE e nas documentações oficiais das plataformas e ferramentas abordadas.
+
+\chapter{Respostas às Questões Propostas}
+
+\section{Computação Móvel}
+\pergunta{1}{Computação Móvel}
+
+Uma empresa deseja desenvolver uma solução para que seus funcionários possam acessar informações corporativas, registrar atividades e realizar operações remotamente utilizando smartphones e tablets. Explique o conceito de computação móvel e analise as principais características que devem ser consideradas no desenvolvimento de uma aplicação para esse cenário, considerando mobilidade, conectividade, disponibilidade de recursos e limitações dos dispositivos.
+
+\resposta A computação móvel diz respeito ao uso de dispositivos portáteis para acessar, processar e transmitir informações independentemente da localização do usuário. No cenário apresentado, ela permite que os usuários consultem informações corporativas, registrem atividades e executem operações fora das instalações da empresa \cite{forman1994}. 
+
+A mobilidade permite que a aplicação seja utilizada em diferentes contextos, como deslocamentos, ambientes externos ou situações em que a interação precisa ser rápida. Para isso, a interface deve ser simples, interativa e responsiva, adequando-se a telas sensíveis ao toque de diferentes tamanhos. Também é importante preservar o contexto da atividade quando o aplicativo for minimizado, interrompido ou alternado com outras aplicações. 
+
+A conectividade também é essencial, uma vez que as redes podem apresentar instabilidades e interrupções. Nesse sentido, a aplicação deve considerar uma conexão instável, armazenar temporariamente os dados no dispositivo, permitir funcionalidades offline e evitar consumo excessivo da rede. Mecanismos de sincronização devem prevenir perdas, duplicações ou conflitos de dados. No contexto corporativo, a comunicação também deve ser protegida por autenticação, controle de acesso e criptografia. 
+
+O desenvolvimento também deve considerar recursos como câmera, GPS, notificações, armazenamento local e sensores. O aplicativo pode utilizá-los para facilitar tarefas, mas seu uso deve respeitar as permissões do sistema operacional, a privacidade do usuário e a necessidade real de cada funcionalidade \cite{androidPermissions,applePrivacy}. 
+
+Por fim, smartphones e tablets possuem limitações de processamento, memória, armazenamento, tamanho da tela e autonomia da bateria. A aplicação deve evitar processamento desnecessário, consumo excessivo de dados e atualizações constantes em segundo plano. Dessa forma, uma solução móvel corporativa adequada deve equilibrar mobilidade e disponibilidade dos serviços com desempenho, segurança, confiabilidade e utilização eficiente dos recursos do dispositivo.
+
+\section{Dispositivos Móveis}
+\pergunta{2}{Dispositivos Móveis}
+
+Os dispositivos móveis apresentam características distintas dos computadores convencionais, como tamanho reduzido, diferentes formas de interação, capacidade limitada de processamento e autonomia energética. Descreva as principais características dos dispositivos móveis e explique como essas limitações influenciam as decisões de projeto e desenvolvimento de aplicações mobile.
+
+\resposta O tamanho limitado da tela influencia a forma como as informações são organizadas na interface, que deve ser clara e evitar excesso de elementos visuais ou textos muito extensos. A capacidade de processamento, memória e armazenamento influencia a lógica das operações, que deve evitar consumo desnecessário de recursos e possíveis encerramentos da aplicação pelo sistema \cite{androidMemory,forman1994}.
+
+A autonomia energética também é uma limitação. O uso contínuo de GPS, câmera, sensores, conexão e processamento em segundo plano pode consumir rapidamente a bateria. Assim, esses recursos devem ser utilizados apenas quando necessários \cite{appleEnergy}. A aplicação também deve tratar falhas de conexão, informar o usuário e, quando possível, armazenar informações localmente para sincronizá-las posteriormente.
+
+Essas limitações não devem ser tratadas de forma isolada, pois influenciam conjuntamente as escolhas de interface, arquitetura, armazenamento, segurança e funcionamento da aplicação.
+
+\section{Sistemas Operacionais Móveis}
+\pergunta{3}{Sistemas Operacionais Móveis}
+
+Um aplicativo precisa utilizar recursos de hardware como câmera, GPS, sensores e armazenamento do dispositivo. Explique a função do sistema operacional em dispositivos móveis e analise como ele atua como intermediário entre a aplicação e os recursos de hardware, considerando também aspectos como gerenciamento de memória, processos, segurança e permissões.
+
+\resposta O sistema operacional móvel atua como intermediário entre as aplicações e o hardware do dispositivo. Em vez de acessar diretamente componentes como câmera, GPS, sensores e armazenamento, as aplicações utilizam interfaces disponibilizadas pelo sistema operacional. Essa camada facilita o desenvolvimento e garante que os recursos do aparelho sejam utilizados de maneira controlada, segura e padronizada \cite{androidFundamentals}. 
+
+No uso da câmera, por exemplo, a aplicação solicita ao sistema operacional a abertura do recurso por meio de uma API. O sistema verifica a permissão, controla o acesso e fornece os dados produzidos. O mesmo ocorre com o GPS, os sensores e o armazenamento. Essa lógica dispensa a aplicação de conhecer os detalhes de cada hardware \cite{androidPermissions,applePrivacy}. 
+
+O gerenciamento de memória é outra função importante. O sistema operacional distribui a memória disponível entre as aplicações e pode limitar ou encerrar processos quando os recursos se tornam insuficientes. Por isso, o desenvolvedor deve evitar consumo excessivo, liberar recursos que não estão mais em uso e preservar informações importantes para que a aplicação consiga restaurar seu estado posteriormente \cite{androidMemory}. 
+
+Em relação aos processos, o sistema operacional também controla a execução e o ciclo de vida das aplicações. Um aplicativo pode assumir diferentes estados, como ativo, pausado, executando em segundo plano ou encerrado. Essa característica influencia o desenvolvimento, pois operações importantes devem ser tratadas corretamente para evitar perda ou inconsistência de dados \cite{androidLifecycle,appleLifecycle}. 
+
+O sistema operacional também estabelece mecanismos de segurança para isolar as aplicações, impedindo que uma delas acesse livremente os dados de outra. Esse isolamento reduz os riscos de alteração, vazamento ou uso indevido das informações armazenadas no dispositivo. Além disso, recursos sensíveis são protegidos por permissões. 
+
+As permissões devem ser solicitadas somente quando forem realmente necessárias e acompanhadas de uma explicação clara sobre sua finalidade. Portanto, o sistema atua não apenas como intermediário técnico entre software e hardware, mas também como responsável pelo gerenciamento dos recursos, pelo controle do ciclo de vida das aplicações e pela proteção do dispositivo e dos dados do usuário.
+
+\section{Aplicações Nativas e Multiplataforma}
+\pergunta{4}{Aplicações Nativas e Multiplataforma}
+
+Uma empresa pretende disponibilizar um aplicativo para usuários de diferentes sistemas operacionais móveis, buscando reduzir o tempo e o custo de desenvolvimento sem comprometer significativamente a experiência do usuário. Compare o desenvolvimento de aplicações nativas e multiplataforma, destacando as principais vantagens e limitações de cada abordagem, especialmente quanto a desempenho, acesso aos recursos do dispositivo, manutenção, reutilização de código e experiência do usuário.
+
+\resposta As aplicações nativas são desenvolvidas especificamente para cada sistema operacional, utilizando suas linguagens, ferramentas e componentes próprios. Essa abordagem geralmente oferece melhor desempenho, acesso mais direto aos recursos do dispositivo e uma experiência visual integrada à plataforma. Entretanto, manter versões separadas para Android e iOS aumenta o tempo, o custo e a complexidade do desenvolvimento. 
+
+As aplicações multiplataforma utilizam uma única base de código para atender diferentes sistemas operacionais. Tecnologias como React Native permitem reutilizar grande parte do código, facilitando a manutenção e acelerando a entrega, ao mesmo tempo que renderizam componentes de interface correspondentes aos elementos nativos das plataformas \cite{reactNativeHome}. 
+
+Para a empresa apresentada, a abordagem multiplataforma é a mais adequada por reduzir custos e evitar a duplicação do desenvolvimento sem comprometer significativamente a experiência do usuário. A escolha deve ser acompanhada de testes em cada sistema e, quando necessário, da implementação de ajustes específicos para garantir desempenho e acesso adequado aos recursos do dispositivo.
+
+\section{Computação Ubíqua e Pervasiva}
+\pergunta{5}{Computação Ubíqua e Pervasiva}
+
+Imagine um ambiente residencial no qual smartphones, sensores, dispositivos vestíveis e equipamentos inteligentes estejam conectados e sejam capazes de coletar informações e executar ações de forma integrada, muitas vezes sem intervenção direta do usuário. Explique os conceitos de computação ubíqua e computação pervasiva e analise como esses paradigmas podem ser aplicados em ambientes inteligentes, destacando o papel dos dispositivos móveis, da conectividade, dos sensores e da interação entre os dispositivos.
+
+\resposta A computação ubíqua representa a integração da tecnologia ao cotidiano, permitindo que serviços computacionais estejam disponíveis em diferentes lugares e dispositivos de maneira discreta. A computação pervasiva enfatiza a presença da computação no ambiente e sua capacidade de perceber o contexto, trocar informações e adaptar seu funcionamento sem exigir comandos constantes do usuário. Os conceitos são próximos e complementares \cite{satyanarayanan2001}.
+
+Em uma residência inteligente, sensores podem identificar temperatura, luminosidade, movimento ou condições de saúde. Essas informações podem ser compartilhadas com equipamentos como lâmpadas, climatizadores, fechaduras e dispositivos vestíveis, permitindo ações automáticas. Por exemplo, o sistema pode ajustar a iluminação ao detectar a presença de uma pessoa ou enviar um alerta quando um sensor identificar uma situação incomum.
+
+Os dispositivos móveis funcionam como meios de controle, visualização e recebimento de notificações. A conectividade permite a comunicação entre os equipamentos, enquanto os sensores coletam dados sobre o ambiente e os usuários. Para que essa integração seja eficiente, os dispositivos devem utilizar formas compatíveis e seguras de comunicação, preservar a privacidade dos dados e continuar operando adequadamente diante de falhas de conexão.
+
+\section{Ambiente de Desenvolvimento, React Native e Expo}
+\pergunta{6}{Ambiente de Desenvolvimento, React Native e Expo}
+
+Uma equipe de desenvolvimento precisa criar uma aplicação mobile para Android e iOS utilizando uma única base de código, buscando agilizar o processo de desenvolvimento, testes e execução do aplicativo em diferentes dispositivos. Explique a função do ambiente de desenvolvimento no processo de criação de aplicações mobile e analise as características do React Native e do Expo que contribuem para o desenvolvimento, execução, testes e distribuição dessas aplicações.
+
+\resposta O ambiente de desenvolvimento reúne as ferramentas utilizadas para escrever, executar, depurar e testar a aplicação. Ele pode incluir editor de código, bibliotecas, emuladores, dispositivos físicos e ferramentas de compilação, permitindo identificar erros e verificar o comportamento do aplicativo antes de sua distribuição.
+
+O React Native permite desenvolver aplicações para Android e iOS com JavaScript ou TypeScript e reutilizar grande parte do código entre as plataformas. Seus componentes são renderizados como elementos nativos da interface, contribuindo para uma experiência próxima à de aplicações desenvolvidas especificamente para cada sistema. Quando necessário, também é possível utilizar módulos ou código nativo \cite{reactNativeHome}.
+
+O Expo complementa o React Native oferecendo ferramentas e serviços que simplificam a configuração do projeto, o acesso a funcionalidades do dispositivo, a execução e os testes em aparelhos. Seus serviços também auxiliam na geração das versões finais e no envio às lojas. Assim, React Native e Expo reduzem tarefas de configuração e duplicação de código, embora a aplicação ainda precise ser testada separadamente no Android e no iOS \cite{expoDocs}.
+
+\section{Componentes, Layouts e Interfaces}
+\pergunta{7}{Componentes, Layouts e Interfaces}
+
+Uma aplicação de comércio eletrônico precisa apresentar produtos em diferentes tamanhos de tela, mantendo uma organização visual adequada e proporcionando uma boa experiência de uso. Explique o conceito de componentes no React Native e descreva como os mecanismos de layout podem ser utilizados para estruturar uma interface responsiva, considerando organização, reutilização de componentes, posicionamento e adaptação a diferentes dispositivos.
+
+\resposta Os componentes são unidades reutilizáveis que formam a interface de uma aplicação React Native. Cada componente pode representar uma parte específica, como cabeçalho, botão, campo de pesquisa ou card de produto. Eles podem receber propriedades para exibir conteúdos diferentes, permitindo reutilizar a mesma estrutura para vários produtos e facilitando a organização e a manutenção do código \cite{reactNativeComponents}.
+
+O layout no React Native utiliza principalmente o Flexbox para distribuir, alinhar e posicionar os elementos. Propriedades como direção, alinhamento, espaçamento e proporção permitem organizar os produtos em linhas ou colunas sem depender de posições fixas. Listas próprias para grandes conjuntos de dados também ajudam a apresentar os itens com melhor desempenho \cite{reactNativeFlexbox,reactNativeFlatList}.
+
+Para adaptar a interface a diferentes dispositivos, devem ser utilizadas dimensões flexíveis, limites de tamanho e alterações de layout conforme o espaço disponível. Em uma tela estreita, os produtos podem aparecer em uma única coluna; em uma tela maior, podem ser distribuídos em duas ou mais. Dessa forma, a combinação entre componentes reutilizáveis e layouts flexíveis mantém a interface organizada, responsiva e adequada a diferentes tamanhos de tela.
+
+
+\section{Eventos e Interação com o Usuário}
+\pergunta{8}{Eventos e Interação com o Usuário}
+
+Em um aplicativo de cadastro, o usuário deve preencher campos, selecionar opções e acionar botões para enviar informações. Cada interação precisa produzir uma resposta adequada da aplicação. Explique o conceito de eventos em aplicações React Native e analise como os eventos de interação do usuário podem ser tratados pelos componentes, apresentando exemplos de situações envolvendo toques, alterações em campos de entrada e seleção de elementos.
+
+\resposta Eventos são ocorrências identificadas pela aplicação, geralmente produzidas por ações do usuário, como tocar em um botão, digitar em um campo ou selecionar uma opção. No React Native, os componentes disponibilizam propriedades específicas para associar essas interações a funções responsáveis por definir a resposta da aplicação \cite{reactNativeTextInput,reactNativePressable}.
+
+Em um formulário, o evento de alteração de um campo de texto pode atualizar os dados informados pelo usuário e realizar validações. A seleção de uma opção pode registrar a escolha e alterar a interface, como exibir campos adicionais. Já o toque no botão de envio pode verificar o preenchimento, apresentar mensagens de erro ou encaminhar os dados quando estiverem válidos.
+
+O tratamento dos eventos deve fornecer retorno claro e imediato. A aplicação pode destacar campos inválidos, desabilitar o botão durante o envio e informar se o cadastro foi concluído. Assim, os eventos conectam as ações do usuário ao comportamento dos componentes, mantendo os dados e a interface atualizados durante a interação.
+
+
+\section{Navegação}
+\pergunta{9}{Navegação}
+
+Considere um aplicativo composto pelas telas de login, página inicial, perfil do usuário, configurações e detalhes de produtos. O usuário deve conseguir transitar entre essas telas de forma organizada, mantendo o contexto necessário durante a utilização do aplicativo. Explique o conceito de navegação em aplicações mobile desenvolvidas com React Native e descreva como uma estrutura de navegação pode ser planejada para controlar a transição entre telas, considerando rotas, passagem de parâmetros e retorno à tela anterior.
+
+\resposta A navegação é o mecanismo que organiza as telas de uma aplicação e controla como o usuário se desloca entre elas. No React Native, bibliotecas de navegação permitem associar cada tela a uma rota, abrir ou substituir páginas e retornar pelo histórico de navegação \cite{reactNavigation}.
+
+No aplicativo apresentado, a tela de login pode iniciar um fluxo de autenticação e encaminhar o usuário à página inicial. A partir dela, áreas principais, como perfil e configurações, podem ser acessadas por abas ou menu. Já telas secundárias, como os detalhes de um produto, podem ser abertas sobre a tela atual por meio de uma navegação em pilha.
+
+As rotas também podem receber parâmetros. Ao selecionar um produto, por exemplo, seu identificador pode ser enviado à tela de detalhes para carregar as informações correspondentes. A navegação em pilha mantém o histórico das telas visitadas, permitindo retornar à tela anterior sem perder o contexto, como a posição da lista ou os filtros utilizados \cite{reactNavigationParams}.
+
+\section{Gerenciamento de Estado}
+\pergunta{10}{Gerenciamento de Estado}
+
+Em uma aplicação de compras, o usuário pode adicionar produtos ao carrinho, alterar quantidades e remover itens. Essas informações precisam ser atualizadas na interface sempre que ocorrer uma alteração. Explique o conceito de estado em aplicações React Native e analise a importância do gerenciamento de estado para manter os dados e a interface sincronizados, apresentando exemplos de situações em que alterações no estado devem provocar a atualização dos componentes da aplicação.
+
+\resposta O estado representa informações que podem mudar durante o uso da aplicação e influenciar o conteúdo apresentado pelos componentes. No React Native, quando o estado é atualizado corretamente, os componentes relacionados são renderizados novamente para refletir os novos dados \cite{reactState}.
+
+Em uma aplicação de compras, o carrinho pode manter em seu estado a lista de produtos, suas quantidades e o valor total. Ao adicionar um produto, a quantidade de itens exibida no ícone do carrinho deve ser atualizada. Ao alterar uma quantidade, o subtotal do produto e o total da compra precisam ser recalculados. Quando um item é removido, ele deve desaparecer da lista.
+
+O gerenciamento de estado centraliza e controla essas alterações, evitando que diferentes telas apresentem informações inconsistentes. Assim, a página de produtos, o carrinho e o resumo da compra podem utilizar os mesmos dados atualizados, mantendo a interface sincronizada com as ações do usuário.
+
+% ----------------------------------------------------------
+% REFERÊNCIAS
+% ----------------------------------------------------------
+\bibliography{referencias}
+
+\end{document}

@@ -1,5 +1,25 @@
 # Plano de implementação da primeira versão
 
+**08/10/2026 — gráficos ao rolar:** entrada650ms acionada por25% de visibilidade do desenho, repetida na reentrada; preferência reduzida/previews preservados. Web320/390/1280 e tipos/exportação conferidos. [Evidências/limites](validacoes/017-graficos-ao-rolar.md). Revisão humana e Android/zoom pendentes; sem publicação.
+
+**08/10/2026 — navegação contínua autorizada:** próxima tela aparece durante o arraste, páginas lado a lado sem fade; substitui sequência013. Web320/390/1280, cancelamento/interrupção/redução/resize e53 testes/tipos/exportação aprovados. [Evidências](validacoes/015-pager-continuo.md). Revisão da sensação e performance/gestos em aparelho pendentes; sem publicação ou expansão funcional.
+
+**08/10/2026 — Minha conta em nova iteração autorizada:** User Profile Community adaptado à identidade e ações existentes. Identificação centralizada, lista Google/senha e sessão implementadas; sem edição de perfil/ajuda/configurações. Tipos/exportação e revisão web320/390/1280, email longo, foco/estados aprovados. [Evidências](validacoes/014-refinamento-minha-conta.md). Revisão humana e zoom/aparelho pendentes; sem expansão geral ou publicação.
+
+**08/10/2026 — transição lateral autorizada:** usuário solicitou movimento ao deslizar entre telas do piloto. Arraste, saída/entrada, retorno de gesto cancelado, barra fixa e movimento reduzido implementados/conferidos na web320/390/1280;53 testes,tipos e12rotas aprovados. [Evidências](validacoes/013-transicao-lateral-piloto.md). Validar sensação na8081 e aparelho; demais refinamentos continuam em outra iteração. Nenhuma publicação.
+
+**08/10/2026 — workflow real do piloto validado:** após autorização para desenvolvimento, conferida implementação e executado fluxo real em sessão descartável local: filtro gráfico→lista→edição/criação→descarte/salvar/excluir→retorno, restauração e saída. Destino de cancelamento corrigido para Lançamentos. Fixtures limpas, dados humanos preservados;53 testes,tipos e12rotas aprovados. [Evidências](validacoes/012-workflow-real-piloto.md). Pendência de workflow básico real resolvida; próximo recorte de validação é aceite visual/zoom/aparelho. Sem expansão de telas ou publicação autorizada por esta entrega.
+
+**08/10/2026 — escopo do piloto fechado:** usuário encerrou o recorte em Início, Lançamentos, gráficos/interações/animações e barra/gesto com Phosphor. Minha conta integra a navegação, sem refinamento de conteúdo/composição. Refinamento de Minha conta e expansão geral ficam para outra iteração; nenhuma ampliação automática. Validações de sessão real/fluxo completo, zoom e Android seguem pendentes, separadas da conclusão de implementação deste recorte. [Fechamento e evidências](validacoes/011-navegacao-principal.md#fechamento-do-escopo).
+
+**08/10/2026 — navegação principal:** usuário aprovou barra/gesto lateral e lista dedicada em Lançamentos, com Phosphor. Entrega local conferida na web320/390/1280 e toque emulado; tipos,53 testes,2 checks de exportação e12rotas aprovados. Sem publicação. [Evidências](validacoes/011-navegacao-principal.md). Próximo: aceite da composição e validação com sessão real (consulta→lista→edição/criação→descarte/salvar→retorno), zoom e aparelho; consolidação/expansão depois.
+
+**08/10/2026 — interações do piloto:** melhorias propostas autorizadas e implementadas: semana com valores, categoria pelo anel/legenda, limpeza de filtro e cabeçalho compacto. 53 testes, tipos/exportação e revisão web320/390/1280 aprovados; callback de edição conferido em harness fictício. [Evidências/limites](validacoes/010-interacoes-piloto-inicial.md). Próximo passo permanece validar composição, workflow completo com rotas/formulário/sessão real e zoom; depois consolidar direção e expandir.
+
+**08/10/2026 — continuação:** manter as duas visualizações foi aprovado; animações de entrada solicitadas foram implementadas e conferidas na web, com preferência de movimento reduzido. Sem publicação ou expansão geral. [Checks/demonstrações/limites](validacoes/008-piloto-overview-figma.md#animação-de-entrada-e-manutenção-das-duas-visualizações). Não aguardar escolha de uma única representação; próximos passos continuam workflow integrado e zoom da composição.
+
+**08/10/2026 — piloto adicional da inicial:** composição inspirada em My Balance/Analytics e comparação de gráficos semanais/categorias autorizadas, implementadas localmente. Consulta confirmada/filtros/regras financeiras preservados, sem publicação/expansão geral. [Entrega/evidências/limites](validacoes/008-piloto-overview-figma.md). Próxima etapa: aceite da tela/gráfico, workflow integrado e zoom real; depois consolidação/expansão.
+
 Atualizado em **08/10/2026**. Base: [CONTEXTO_APP.md](CONTEXTO_APP.md), decisões D01–D12.
 
 ## Estado e autorização

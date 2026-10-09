@@ -1,0 +1,9 @@
+# Gráficos ao rolar — 08/10/2026
+
+Usuário solicitou animações conforme a rolagem. Agora a entrada650ms começa quando pelo menos25% do desenho (barras/anel, não cabeçalho) entra no viewport. Fora desse limite, aguarda/reset; ao reaparecer, repete. Trocas de modo/dados continuam animadas quando visíveis; seleção/expansão não reinicia. Movimento reduzido apresenta o gráfico completo, inclusive fora de tela; previews da navegação continuam estáticos/completos.
+
+useGraphVisibility usa IntersectionObserver na web, respeitando recorte do scroll/página. No nativo, measureInWindow compara com bounds do viewport real de MonthlyOverview, incluindo altura disponível antes da barra. Eventos de rolagem32ms notificam subscribers sem renderizar o overview em cada evento; apenas mudanças de visibilidade alteram estado. Listeners/observer e animações encerrados na saída. Sem dependência, token, asset, consulta ou regra financeira nova. Fallback web sem IntersectionObserver mantém entrada anterior.
+
+Chrome real com MonthlyOverview/OverviewChart/VisualProvider e preferência de produção, dados fictícios.320/390/1280, viewport500 de altura: barra permanece0 após900ms fora de tela, progressão intermediária ao rolar, final1, saída/reset e reentrada; círculo observado incompleto/completo, retorno após saída e movimento reduzido estático. Zero exceções. Capturas de progressão: [320](assets/017-barras-scroll-320.png), [390](assets/017-barras-scroll-390.png), [1280](assets/017-barras-scroll-1280.png), [anel](assets/017-anel-scroll-1280.png). Harness removido antes da exportação; preview8083 encerrado, normal8081 mantido. Tipos/exportação12rotas aprovados. Sem publicação.
+
+Limites: medição/driver/gestos em Android físico, zoom200%, leitor de tela e teclado virtual não executados nesta entrega; sem nova campanha Auth/CRUD. Sensação e limiar de entrada aguardam revisão humana.

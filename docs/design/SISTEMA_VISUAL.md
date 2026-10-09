@@ -1,5 +1,59 @@
 # Sistema visual
 
+## 08/10/2026 — verdes nas legendas e despesas
+
+Usuário solicitou distinção claro/escuro nas referências dos gráficos e despesa escura na lista. Legenda de receitas usa Jade11 (variante legível de texto do verde das barras Jade9), despesas Jade12 igual à barra escura. ExpenseCard aplica Jade12 também a tipo/categoria/data de despesas; descrição/valor já escuros. Receitas, valores e gráficos preservados. Motivo: associar a legenda às séries e melhorar leitura de despesas. Somente OverviewChart/ExpenseCard, reutilizados em MonthlyOverview/previews; sem tokens novos. [Evidências](../validacoes/018-cores-graficos-lancamentos.md): web320/390/1280, cores computadas/contraste e tipos. Alteração autorizada, revisão humana/aparelho/zoom pendentes.
+
+## 08/10/2026 — entrada dos gráficos por visibilidade
+
+Usuário solicitou animação durante rolagem. OverviewChart aguarda25% do desenho visível antes da entrada650ms; sair/reentrar repete. Movimento reduzido/previews continuam completos. MonthlyOverview fornece viewport/avisos de rolagem ao hook, sem renders a cada evento, dependências ou tokens novos. Motivo: usuário ver a animação ao chegar ao gráfico. [Evidências](../validacoes/017-graficos-ao-rolar.md): web320/390/1280, progresso/espera/reentrada/anel/redução, tipos/exportação. Implementação autorizada; limiar/sensação, Android/zoom pendentes.
+
+## 08/10/2026 — correção responsiva dos valores semanais
+
+Reportada quebra irregular de receitas/despesas na lista expandida. OverviewChart agora usa período acima e duas colunas iguais, rótulos separados dos valores, minWidth0 e separadores entre semanas. Motivo: alinhamento consistente independentemente do valor. Somente composição local da lista; MonthlyOverview/previews reutilizam o componente, sem tokens ou outros consumidores alterados. Correção autorizada; [evidências](../validacoes/016-valores-semanais-responsivos.md) em320/390/490/1280, zeros/valores longos, teclado e tipos. Zoom/aparelho pendentes.
+
+## 08/10/2026 — navegação lateral contínua
+
+Solicitação explícita de mostrar a próxima tela desde o arraste: MainNavigation usa páginas lado a lado com transform compartilhado, sem fade; conclusão240ms, retorno180ms, barra fixa e extremos sem espaço vazio. MainPageContent reutiliza os adapters das três páginas; sem tokens ou composição novos. Previews completos e inativos (inert/ocultação acessível), preferência compartilhada sem listener extra; formulários preservados. Substitui a sequência da entrega013. [Evidências](../validacoes/015-pager-continuo.md): web320/390/1280, contiguidade/opacidade, interrupção/cancelamento/resize/redução,53 testes/tipos/exportação. Implementação autorizada; sensação/aparelho/performance nativa e zoom pendentes.
+
+## 08/10/2026 — Minha conta em nova iteração autorizada
+
+Usuário autorizou refinar Minha conta e forneceu User Profile Community como exemplo. Identificação centralizada, lista de acesso com círculos e sessão separada adaptadas à Jade/Manrope/EZ$ e Phosphor existente: max720/p20, identidade r28, lista r24, ícones de acesso20/círculos40 e perfil40/círculo80. Motivo: leitura e acesso coerentes com o piloto. AccountSettings e adapter auth/account; tokens globais/AuthPanel/outros consumidores preservados. Google/senha/saída/cancelamento conservados; sem novas funções de perfil/ajuda/configurações. Implementação autorizada, composição aguardando aceite. [Evidências](../validacoes/014-refinamento-minha-conta.md): web320/390/1280, email longo, foco/Enter e estados; tipos/exportação. Zoom/aparelho/novo fluxo Auth integrado pendentes. Supera somente a exclusão histórica de refinamento desta tela no escopo fechado.
+
+## 08/10/2026 — movimento lateral das páginas principais
+
+Adendo solicitado pelo usuário após revisão na8081: conteúdo acompanha gesto, retorno curto/cancelado180ms e troca lateral com saída/fade160ms + entrada/fade240ms; barra fixa e extremos sem circular. Links/teclado interrompem movimento e navegam diretamente. Dois dedos cancelam; preferência reduzida desativa deslocamento e fade, inclusive durante gesto. MainNavigation/MainTransitionProvider e preferência compartilhada atendem Início/Lançamentos/Minha conta; OverviewChart reutiliza a preferência, com animações conferidas. Sem tokens/ícones/dependências novos ou refinamento de conta/formulários. [Evidências](../validacoes/013-transicao-lateral-piloto.md):320/390/1280, cancelamento/interrupção/direções/redução/resize,53 testes,tipos e12rotas. Native driver/aparelho e aceite da sensação permanecem pendentes. Amplia escopo fechado somente para esta animação autorizada.
+
+## 08/10/2026 — integração do recorte fechado
+
+Workflow básico do piloto conferido em sessão real local, incluindo filtro→lista→edição/criação→descarte/salvar/excluir→retorno e Minha conta autenticada. “Cancelar e voltar à lista” corrigido para Lançamentos, coerente com separação aprovada; askLeave preservado. Único consumidor afetado é TransactionForm (criação/edição); sem composição/token/ícone novo. Lista real em320/390/1280,53 testes,tipos e exportação aprovados. [Evidências e limites](../validacoes/012-workflow-real-piloto.md). Não amplia escopo fechado nem refina Minha conta; zoom/aparelho/aceite visual seguem pendentes.
+
+## 08/10/2026 — fechamento do escopo do piloto
+
+Usuário encerrou o escopo após confirmar que Minha conta recebeu somente barra/gesto, sem refinamento visual próprio. Recorte implementado: Início e Lançamentos, duas representações animadas/interativas e navegação Phosphor entre as três páginas principais. Minha conta mantém apresentação anterior; seu refinamento e expansão geral ficam para outra iteração. Registro de escopo, sem alterar tokens/componentes nesta etapa e sem declarar aceite visual integral ou validações pendentes concluídas. [Fechamento/evidências](../validacoes/011-navegacao-principal.md#fechamento-do-escopo).
+
+## 08/10/2026 — navegação principal do piloto
+
+**Implementação aprovada:** barra inferior e gesto lateral entre Início, Lançamentos e Minha conta; lista separada do resumo. Phosphor oficial regular com rótulos, 24px, área mínima60px e seleção em superfície Jade/texto forte. Motivo: acesso constante aos destinos e validação da organização antes de expansão. MainNavigation atende as três páginas; MonthlyOverview reutiliza filtros/controller em duas composições; AuthPanel permanece compartilhado sem mudança. Formulários não recebem barra/gesto; recuperação “Voltar à lista” aponta novo destino. Safe area e barra em fluxo, sem cobrir conteúdo; sem tokens globais/dependências novas. [Capturas/checks/limites](../validacoes/011-navegacao-principal.md). Composição aguardando aceite; gesto nativo/aparelho, zoom e workflow real ainda pendentes.
+
+## 08/10/2026 — interações e compactação do piloto
+
+**Implementação autorizada pelo usuário:** semanas selecionáveis com valores exatos; anel/legenda aplicam filtro de categoria com limpeza próxima ao gráfico; visualização escolhida permanece durante atualização; cabeçalho/resumo/controles mensais compactados para aproximar o gráfico do início. Motivo: validar leitura → seleção → lançamento no piloto. Alterações locais em MonthlyOverview/OverviewChart, sem mudar tokens compartilhados ou outros consumidores. Duas visualizações e animações preservadas; aceite visual e expansão geral ainda pendentes. Conferidos teclado, erros/vazio e larguras 320/390/1280, 53 testes, tipos e exportação. [Evidências e limites](../validacoes/010-interacoes-piloto-inicial.md); fluxo real de edição/retorno, zoom e aparelho ainda pendentes.
+
+## 08/10/2026 — duas visualizações mantidas e entrada animada
+
+**Aprovado pelo usuário:** manter Por semana e Por categoria na inicial; adicionar barras entrando de baixo para cima e anel preenchendo de um ponto até completar. Implementado em `OverviewChart`: entrada de 650 ms com desaceleração, barras com scaleY ancorado na base e anel com revelação sequencial no sentido horário a partir de12h. Entrada se repete ao abrir/trocar a visualização e quando seus dados mudam; expansão de detalhes não reinicia a animação. Totais/rótulos/legendas não são animados. Movimento reduzido apresenta o gráfico completo, inclusive quando a preferência muda durante a sessão; animações/listeners são encerrados na saída/interrupção.
+
+Sem dependências/tokens ou outros consumidores alterados. Web: SVG nativo ao DOM para animar arcos sem recarregar imagens por quadro; Android: SVG dinâmico via expo-image existente, sem cache de quadros/transition. NativeDriver nas barras; anel com progressão isolada em componente próprio, sem recalcular a consulta financeira por quadro. Chrome em320/390/1280 confirmou progressão/finalização, troca rápida e movimento reduzido. Android/aparelho ainda não validado; demais limites do piloto permanecem. [Demonstrações e checks](../validacoes/008-piloto-overview-figma.md#animação-de-entrada-e-manutenção-das-duas-visualizações).
+
+## 08/10/2026 — piloto da inicial inspirado no Figma, em validação
+
+Usuário autorizou adaptar My Balance/Analytics (Light/Balance) e comparar gráficos na inicial. **Proposta local, sem aceite da composição/gráfico principal ou expansão geral.** Saldo do período dominante, Novo lançamento no resumo, filtro expansível e gráfico semanal/categorias usando o resultado confirmado. Motivo: validar utilidade do gráfico e workflow antes de refinar outras telas.
+
+Jade/Manrope/EZ$ preservadas. Composição local em `MonthlyOverview`/`OverviewChart`: max960/p20; resumo r28/p24; seção gráfica r24/p20; saldo36/48 (24/32 para valor longo abaixo de400px); seleção gráfica Jade12/Jade1. Barras Jade9/Jade12 e anel com gradações Jade, acompanhados de valores/texto. Nenhum token compartilhado alterado, portanto demais consumidores conservam a direção vigente. ExpenseCard/FlatList reutilizados; sem novos assets/dependências ou alterações de formulário/Auth/diálogos.
+
+[Evidências/checks/limites](../validacoes/008-piloto-overview-figma.md). 320/390/1280, teclado e estados conferidos em harness isolado; zoom real, teclado virtual, leitor de tela, Android e novo workflow integrado pendentes. Refinamento geral depende do aceite humano; autorização deste piloto não se estende às demais telas.
+
 Registro canônico iniciado em **08/10/2026**. Composição Jade do piloto aprovada explicitamente, direção consolidada e aplicada na fase B. Manrope 400/600/700 em todas as telas existentes. Registro atual ao final; inventário e propostas iniciais abaixo são históricos. SPEC-007 parcial pelo limite não textual de R03, sem declarar WCAG integral ou V1 concluída.
 
 ## Inventário de implementação

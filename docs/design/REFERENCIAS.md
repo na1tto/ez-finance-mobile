@@ -1,5 +1,11 @@
 # Catálogo de referências
 
+## F01 — Balance Finance App UIKit, Figma Light
+
+[Arquivo fornecido pelo usuário](https://www.figma.com/design/ZRrsaOE0anDeT1zZncBgUe/Balance?node-id=0-1), acesso confirmado em08/10/2026. Contexto/render de My balance `1:17` e Analytics `1:2353` consultados. Observados saldo/ações/barras na primeira e totais/anel na segunda, com fundos claros/lilás e formas arredondadas.
+
+Uso autorizado: **piloto da inicial e comparação de gráficos**, adaptados a Jade/Manrope e consulta real do ez finance. Composição final ainda em validação. Não aprova transferências, contatos, câmbio, patrimônio, notificações ou saúde financeira. Sem assets copiados; autoria/licença de redistribuição não verificadas. [Registro do piloto](../validacoes/008-piloto-overview-figma.md).
+
 Inspeção das dez imagens locais em **08/10/2026**. Produto identificado na marca das capturas: **Buddy**; coleção nomeada **iOS Onboarding**; fonte indicada nas imagens: **Mobbin**. Link direto do fluxo, versão do aplicativo e data de coleta: **a fornecer**. Registrar aqui, sem duplicar as imagens.
 
 **Orientação aprovada em 08/10/2026:** o fluxo do Mobbin não corresponde à proposta do aplicativo. Usar as imagens apenas como inspiração estética para figuras, ícones, tipografia, cores e tratamentos visuais. Não adotar o fluxo, a arquitetura de telas ou a identidade integral do Buddy. Phosphor é a biblioteca de ícones escolhida e Manrope é a fonte aprovada; as cores do Ez Finance continuam em aberto.

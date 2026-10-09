@@ -5,6 +5,7 @@ import { Button, Text, visual, VisualProvider, useTypography, ErrorFeedback } fr
 import { AuthProvider, useAuth } from '@/contexts/AuthContext';
 import { ExpensesProvider } from '@/contexts/ExpensesContext';
 import { authDestination } from '@/lib/auth/navigation';
+import { MainTransitionProvider } from '@/components/MainNavigation';
 function Navigation() {
   const { ready } = useTypography();
   const { state, auth } = useAuth();
@@ -38,15 +39,16 @@ function Navigation() {
         <Stack.Screen name="auth/email-link" options={{ title: 'Receber link' }} />
       </Stack.Protected>
       <Stack.Protected guard={state.status === 'authenticated'}>
-        <Stack.Screen name="index" options={{ title: 'Lançamentos' }} />
+        <Stack.Screen name="index" options={{ title: 'Início', headerShown: false, animation: 'none' }} />
+        <Stack.Screen name="transactions" options={{ title: 'Lançamentos', headerShown: false, animation: 'none' }} />
         <Stack.Screen name="expenses" options={{ headerShown: false }} />
-        <Stack.Screen name="auth/account" options={{ title: 'Minha conta' }} />
+        <Stack.Screen name="auth/account" options={{ title: 'Minha conta', headerShown: false, animation: 'none' }} />
       </Stack.Protected>
       <Stack.Screen name="auth/callback" options={{ title: 'Confirmar autenticação' }} />
       <Stack.Screen name="auth/reset-password" options={{ title: 'Recuperar senha' }} />
     </Stack>;
 }
 function PrivateState() {
-  return <ExpensesProvider><Navigation /></ExpensesProvider>;
+  return <ExpensesProvider><MainTransitionProvider><Navigation /></MainTransitionProvider></ExpensesProvider>;
 }
 export default function RootLayout() { return <VisualProvider><AuthProvider><PrivateState /></AuthProvider></VisualProvider>; }
